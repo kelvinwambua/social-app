@@ -7,9 +7,9 @@ import Animated, {
 
 import {useTheme} from '#/alf'
 import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
+  Spark_Filled_Stroke2_Corner0_Rounded as SparkIconFilled,
+  Spark_Stroke2_Corner0_Rounded as SparkIconOutline,
+} from '#/components/icons/Spark'
 
 const keyframe = new Keyframe({
   0: {
@@ -85,10 +85,10 @@ export function AnimatedLikeIcon({
         {isLiked ? (
           <Animated.View
             entering={shouldAnimate ? keyframe.duration(300) : undefined}>
-            <HeartIconFilled style={{color: t.palette.pink}} width={size} />
+            <SparkIconFilled style={{color: t.palette.pink}} width={size} />
           </Animated.View>
         ) : (
-          <HeartIconOutline
+          <SparkIconOutline
             style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
             width={size}
           />

@@ -9,16 +9,19 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
+import {type OAuthSession} from '@atproto/oauth-client-browser'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
   BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
+  GREENEARTH_SAVED_FEED,
   IS_PROD_SERVICE,
   PUBLIC_BSKY_SERVICE,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
+import {restoreOAuthSession} from '#/lib/oauth/client'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
@@ -57,6 +60,19 @@ export async function createAgentAndResume(
     event: AtpSessionEvent,
   ) => void,
 ) {
+  /*
+   * OAuth tokens are DPoP-bound, so they are never persisted alongside the
+   * account the way JWTs are - the client holds the key material and hands back
+   * a live session keyed by DID.
+   */
+  if (storedAccount.authMethod === 'oauth') {
+    const oauthSession = await restoreOAuthSession(storedAccount.did)
+    if (!oauthSession) {
+      throw new Error('Could not restore OAuth session')
+    }
+    return createAgentAndOAuthLogin(oauthSession)
+  }
+
   const agent = new BskyAppAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
@@ -204,6 +220,10 @@ export async function createAgentAndCreateAccount(
       networkRetry(1, () => {
         return agent.overwriteSavedFeeds([
           {
+            ...GREENEARTH_SAVED_FEED,
+            id: TID.nextStr(),
+          },
+          {
             ...DISCOVER_SAVED_FEED,
             id: TID.nextStr(),
           },
@@ -282,6 +302,65 @@ export async function createAgentAndCreateAccount(
   })
 }
 
+/**
+ * Builds an agent from an OAuth session.
+ *
+ * Unlike the password factories this cannot use `BskyAppAgent`, which extends
+ * `AtpAgent` and is hardwired to JWT session management. The base `Agent`
+ * accepts any session manager, and an `OAuthSession` is one, so the OAuth
+ * session drives request signing and token refresh itself.
+ */
+export async function createAgentAndOAuthLogin(oauthSession: OAuthSession) {
+  /*
+   * Deliberately built without the appview proxy header: getSession is a PDS
+   * call, and the proxy would route it to the appview, which does not serve
+   * it. The password factories have the same ordering - they establish the
+   * session first and only configure the proxy afterwards.
+   */
+  const agent = new Agent(null, oauthSession)
+
+  /*
+   * OAuth gives us a DID but no profile, so ask the PDS who this is. This
+   * doubles as an early check that the granted scopes actually work.
+   */
+  const {data} = await agent.com.atproto.server.getSession()
+  const account: SessionAccount = {
+    service: oauthSession.serverMetadata.issuer,
+    did: data.did,
+    handle: data.handle,
+    email: data.email,
+    emailConfirmed: data.emailConfirmed || false,
+    emailAuthFactor: data.emailAuthFactor || false,
+    signupQueued: false,
+    active: data.active ?? true,
+    status: data.status,
+    isSelfHosted: !oauthSession.serverMetadata.issuer.startsWith(BSKY_SERVICE),
+    authMethod: 'oauth',
+  }
+
+  /*
+   * Must happen before the proxy header goes on, and before we hand the agent
+   * back: the age assurance gate reads this state during render, and without
+   * it the gate has nothing to work with. The password factories do the same.
+   *
+   * Cast is safe: age assurance only touches base-Agent APIs (sessionManager,
+   * app.bsky.ageassurance.*, getPreferences), so its AtpAgent annotation is
+   * narrower than what it actually uses.
+   */
+  const aa = prefetchAgeAssuranceServerData({
+    agent: agent as unknown as AtpAgent,
+  })
+
+  // Safe to proxy now that the PDS handshake is done.
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
+
+  const gates = features.refresh({strategy: 'prefer-fresh-gates'})
+  const moderation = configureModerationForAccount(agent, account)
+  await Promise.all([gates, moderation, aa])
+
+  return {account, agent}
+}
+
 export function agentToSessionAccountOrThrow(agent: AtpAgent): SessionAccount {
   const account = agentToSessionAccount(agent)
   if (!account) {
@@ -343,6 +422,18 @@ export class Agent extends BaseAgent {
       this.configureProxy(proxyHeader)
     }
   }
+
+  /**
+   * Counterpart to {@link BskyAppAgent.dispose}. The session provider calls
+   * this on whichever agent it is discarding, so it has to exist on every
+   * agent we hand it - a missing one throws during React's commit phase and
+   * takes down the whole tree.
+   *
+   * There is nothing to neutralize for an OAuth agent: the tokens belong to
+   * the OAuth client, which owns refresh and revocation for the DID rather
+   * than the agent instance.
+   */
+  dispose() {}
 }
 
 // Not exported. Use factories above to create it.

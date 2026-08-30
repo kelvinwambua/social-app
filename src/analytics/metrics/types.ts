@@ -38,6 +38,7 @@ export type Events = {
       | 'ChooseAccountForm'
       | 'Settings'
       | 'Notification'
+      | 'OAuth'
     withPassword: boolean
   }
   'account:loggedOut': {

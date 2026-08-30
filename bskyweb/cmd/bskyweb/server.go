@@ -82,6 +82,7 @@ func serve(cctx *cli.Context) error {
 	staticCDNHost = strings.TrimSuffix(staticCDNHost, "/")
 	canonicalInstance := cctx.Bool("bsky-canonical-instance")
 	robotsDisallowAll := cctx.Bool("robots-disallow-all")
+	oauthClientOrigin := cctx.String("oauth-client-origin")
 
 	// Echo
 	e := echo.New()
@@ -269,6 +270,55 @@ func serve(cctx *cli.Context) error {
 		e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	}
 
+	/*
+	 * atproto OAuth client metadata.
+	 *
+	 * The client_id *is* this document's URL, and the authorization server
+	 * fetches it, so it has to be served from the same origin as the app and
+	 * agree with the redirect URI the client sends. When no origin is
+	 * configured we derive one from the request, which keeps preview
+	 * deployments working without extra config.
+	 */
+	/*
+	 * TEMPORARY: receives client-side boot errors from the trap in base.html so
+	 * they can be read from the server log and resolved against source maps.
+	 * Remove alongside that trap.
+	 */
+	e.POST("/__boot-error", func(c echo.Context) error {
+		var payload map[string]interface{}
+		if err := c.Bind(&payload); err != nil {
+			return c.NoContent(http.StatusBadRequest)
+		}
+		log.Warnf("BOOT-ERROR %v | file=%v line=%v col=%v | stack=%v",
+			payload["message"], payload["file"], payload["line"],
+			payload["col"], payload["stack"])
+		return c.NoContent(http.StatusNoContent)
+	})
+
+	e.GET("/client-metadata.json", func(c echo.Context) error {
+		origin := oauthClientOrigin
+		if origin == "" {
+			scheme := "https"
+			if forwarded := c.Request().Header.Get("X-Forwarded-Proto"); forwarded != "" {
+				scheme = forwarded
+			}
+			origin = scheme + "://" + c.Request().Host
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"client_id":                  origin + "/client-metadata.json",
+			"client_name":                "Sparkable",
+			"client_uri":                 origin,
+			"logo_uri":                   origin + "/static/favicon.png",
+			"redirect_uris":              []string{origin + "/oauth/callback"},
+			"scope":                      "atproto transition:generic transition:chat.bsky",
+			"grant_types":                []string{"authorization_code", "refresh_token"},
+			"response_types":             []string{"code"},
+			"token_endpoint_auth_method": "none",
+			"application_type":           "web",
+			"dpop_bound_access_tokens":   true,
+		})
+	})
+
 	e.GET("/iframe/*", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -300,6 +350,7 @@ func serve(cctx *cli.Context) error {
 	// generic routes
 	e.GET("/hashtag/:tag", server.WebGeneric)
 	e.GET("/topic/:topic", server.WebGeneric)
+	e.GET("/oauth/callback", server.WebGenericNoindex)
 	e.GET("/search", server.WebGenericNoindex)
 	e.GET("/feeds", server.WebGenericNoindex)
 	e.GET("/notifications", server.WebGenericNoindex)

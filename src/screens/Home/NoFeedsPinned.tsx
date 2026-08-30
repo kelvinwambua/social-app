@@ -5,7 +5,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {CenteredView} from '#/view/com/util/Views'
@@ -28,39 +28,27 @@ export function NoFeedsPinned({
     useOverwriteSavedFeedsMutation()
 
   const addRecommendedFeeds = useCallback(async () => {
-    let skippedTimeline = false
-    let skippedDiscover = false
-    let remainingSavedFeeds = []
-
-    // remove first instance of both timeline and discover, since we're going to overwrite them
-    for (const savedFeed of preferences.savedFeeds) {
-      if (savedFeed.type === 'timeline' && !skippedTimeline) {
-        skippedTimeline = true
-      } else if (
-        savedFeed.value === DISCOVER_SAVED_FEED.value &&
-        !skippedDiscover
-      ) {
-        skippedDiscover = true
-      } else {
-        remainingSavedFeeds.push(savedFeed)
+    /*
+     * Drop the first instance of each recommended feed, since we re-add them
+     * pinned at the top, but keep anything else the person had saved.
+     */
+    const pendingDefaults = new Set(RECOMMENDED_SAVED_FEEDS.map(f => f.value))
+    const remainingSavedFeeds = preferences.savedFeeds.filter(savedFeed => {
+      if (pendingDefaults.has(savedFeed.value)) {
+        pendingDefaults.delete(savedFeed.value)
+        return false
       }
-    }
+      return true
+    })
 
-    const toSave = [
-      {
-        ...DISCOVER_SAVED_FEED,
+    await overwriteSavedFeeds([
+      ...RECOMMENDED_SAVED_FEEDS.map(feed => ({
+        ...feed,
         pinned: true,
         id: TID.nextStr(),
-      },
-      {
-        ...TIMELINE_SAVED_FEED,
-        pinned: true,
-        id: TID.nextStr(),
-      },
+      })),
       ...remainingSavedFeeds,
-    ]
-
-    await overwriteSavedFeeds(toSave)
+    ])
   }, [overwriteSavedFeeds, preferences.savedFeeds])
 
   return (

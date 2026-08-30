@@ -19,7 +19,7 @@ export function ProfileLabelerLikedByScreen({
 
   return (
     <Layout.Screen>
-      <ViewHeader title={_(msg`Liked By`)} />
+      <ViewHeader title={_(msg`Sparked By`)} />
       <LikedByList uri={uri} />
     </Layout.Screen>
   )

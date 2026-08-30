@@ -294,13 +294,8 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   }, [navigation, setDrawerOpen, ax])
 
   const onPressFeedback = useCallback(() => {
-    Linking.openURL(
-      FEEDBACK_FORM_URL({
-        email: currentAccount?.email,
-        handle: currentAccount?.handle,
-      }),
-    )
-  }, [currentAccount])
+    Linking.openURL(FEEDBACK_FORM_URL)
+  }, [])
 
   const onPressHelp = useCallback(() => {
     Linking.openURL(HELP_DESK_URL)

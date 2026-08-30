@@ -94,7 +94,7 @@ export function LikeCount({likeCount}: {likeCount: number}) {
         {fontWeight: '600'},
       ]}>
       <Trans>
-        Liked by <Plural value={likeCount} one="# user" other="# users" />
+        Sparked by <Plural value={likeCount} one="# user" other="# users" />
       </Trans>
     </Text>
   )

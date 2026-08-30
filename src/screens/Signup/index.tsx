@@ -241,7 +241,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                           <Trans>Having trouble?</Trans>{' '}
                           <InlineLinkText
                             label={l`Contact support`}
-                            to={FEEDBACK_FORM_URL({email: state.email})}
+                            to={FEEDBACK_FORM_URL}
                             style={[!gtMobile && a.text_md]}>
                             <Trans>Contact support</Trans>
                           </InlineLinkText>

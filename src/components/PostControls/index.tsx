@@ -214,11 +214,53 @@ let PostControls = ({
         style,
       ]}>
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
+        <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
+          <PostControlButton
+            testID="likeBtn"
+            big={big}
+            active={Boolean(post.viewer?.like)}
+            activeColor={t.palette.pink}
+            onPress={() => requireAuth(() => onPressToggleLike())}
+            label={
+              post.viewer?.like
+                ? l({
+                    message: `Unspark (${plural(post.likeCount || 0, {
+                      one: '# spark',
+                      other: '# sparks',
+                    })})`,
+                    comment:
+                      'Accessibility label for the spark button when the post has been sparked, verb followed by number of sparks and noun',
+                  })
+                : l({
+                    message: `Spark (${plural(post.likeCount || 0, {
+                      one: '# spark',
+                      other: '# sparks',
+                    })})`,
+                    comment:
+                      'Accessibility label for the spark button when the post has not been sparked, verb form followed by number of sparks and noun form',
+                  })
+            }>
+            <AnimatedLikeIcon
+              isLiked={Boolean(post.viewer?.like)}
+              big={big}
+              hasBeenToggled={hasLikeIconBeenToggled}
+            />
+            <CountWheel
+              count={post.likeCount ?? 0}
+              isToggled={Boolean(post.viewer?.like)}
+              hasBeenToggled={hasLikeIconBeenToggled}
+              renderCount={({count}) => (
+                <PostControlButtonText testID="likeCount">
+                  {formatPostStatCount(count)}
+                </PostControlButtonText>
+              )}
+            />
+          </PostControlButton>
+        </View>
         <View
           style={[
             a.flex_1,
             a.align_start,
-            {marginLeft: big ? -2 : -6},
             replyDisabled ? {opacity: 0.6} : undefined,
           ]}>
           <PostControlButton
@@ -263,49 +305,6 @@ let PostControls = ({
             big={big}
             embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
           />
-        </View>
-        <View style={[a.flex_1, a.align_start]}>
-          <PostControlButton
-            testID="likeBtn"
-            big={big}
-            active={Boolean(post.viewer?.like)}
-            activeColor={t.palette.pink}
-            onPress={() => requireAuth(() => onPressToggleLike())}
-            label={
-              post.viewer?.like
-                ? l({
-                    message: `Unlike (${plural(post.likeCount || 0, {
-                      one: '# like',
-                      other: '# likes',
-                    })})`,
-                    comment:
-                      'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
-                  })
-                : l({
-                    message: `Like (${plural(post.likeCount || 0, {
-                      one: '# like',
-                      other: '# likes',
-                    })})`,
-                    comment:
-                      'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
-                  })
-            }>
-            <AnimatedLikeIcon
-              isLiked={Boolean(post.viewer?.like)}
-              big={big}
-              hasBeenToggled={hasLikeIconBeenToggled}
-            />
-            <CountWheel
-              count={post.likeCount ?? 0}
-              isToggled={Boolean(post.viewer?.like)}
-              hasBeenToggled={hasLikeIconBeenToggled}
-              renderCount={({count}) => (
-                <PostControlButtonText testID="likeCount">
-                  {formatPostStatCount(count)}
-                </PostControlButtonText>
-              )}
-            />
-          </PostControlButton>
         </View>
         {/* Spacer! */}
         <View />

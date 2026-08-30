@@ -36,16 +36,16 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   return (
     <Link
       to={likesHref}
-      label={l`Likes on this post`}
+      label={l`Sparks on this post`}
       onPress={() => ax.metric('post:likedBy:click', {})}>
       <Text
         testID="likeCount-expanded"
         style={[a.text_md, t.atoms.text_contrast_medium]}>
-        <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
+        <Trans comment="Spark count display, the <0> tags enclose the number of sparks in bold (will never be 0)">
           <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
             {formatPostStatCount(likeCount)}
           </Text>{' '}
-          <Plural value={likeCount} one="like" other="likes" />
+          <Plural value={likeCount} one="spark" other="sparks" />
         </Trans>
       </Text>
     </Link>
@@ -128,8 +128,8 @@ export function KnownLikers({post}: {post: AppBskyFeedDefs.PostView}) {
    */
   const rowLabel =
     names.length >= 2
-      ? l`Liked by ${names[0].displayName} and ${names[1].displayName}`
-      : l`Liked by ${names[0].displayName}`
+      ? l`Sparked by ${names[0].displayName} and ${names[1].displayName}`
+      : l`Sparked by ${names[0].displayName}`
 
   const textStyle = [a.text_sm, t.atoms.text_contrast_medium]
   const nameStyle = [a.text_sm, a.font_semi_bold, t.atoms.text]
@@ -166,12 +166,12 @@ export function KnownLikers({post}: {post: AppBskyFeedDefs.PostView}) {
         <AvatarStack profiles={aviStackProfiles} size={AVI_SIZE} />
         <Text testID="knownLikersStat" style={[a.flex_shrink, textStyle]}>
           {names.length >= 2 ? (
-            <Trans comment="Social proof below the post stats; the bolded names are people the viewer follows who liked the post">
-              Liked by {nameLink(names[0])} and {nameLink(names[1])}
+            <Trans comment="Social proof below the post stats; the bolded names are people the viewer follows who sparked the post">
+              Sparked by {nameLink(names[0])} and {nameLink(names[1])}
             </Trans>
           ) : (
-            <Trans comment="Social proof below the post stats; the bolded name is a person the viewer follows who liked the post">
-              Liked by {nameLink(names[0])}
+            <Trans comment="Social proof below the post stats; the bolded name is a person the viewer follows who sparked the post">
+              Sparked by {nameLink(names[0])}
             </Trans>
           )}
         </Text>

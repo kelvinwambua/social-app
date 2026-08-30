@@ -114,6 +114,13 @@ func run(args []string) {
 					Required: false,
 					EnvVars:  []string{"BSKY_CANONICAL_INSTANCE"},
 				},
+				&cli.StringFlag{
+					Name:     "oauth-client-origin",
+					Usage:    "public origin serving this app, used to build the OAuth client metadata; derived from the request when empty",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"OAUTH_CLIENT_ORIGIN"},
+				},
 				&cli.BoolFlag{
 					Name:     "robots-disallow-all",
 					Usage:    "Crawling is allowed by default. Enable this flag to Disallow all",

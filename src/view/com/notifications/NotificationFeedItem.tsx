@@ -53,10 +53,10 @@ import {
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
 import {Contacts_Filled_Corner2_Rounded as ContactsIconFilled} from '#/components/icons/Contacts'
-import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {Spark_Filled_Stroke2_Corner0_Rounded as SparkIconFilled} from '#/components/icons/Spark'
 import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -285,7 +285,7 @@ let NotificationFeedItem = ({
   let a11yLabel = ''
   let notificationContent: React.ReactElement
   let icon = (
-    <HeartIconFilled
+    <SparkIconFilled
       size="xl"
       style={[
         {color: t.palette.pink},
@@ -299,8 +299,8 @@ let NotificationFeedItem = ({
       ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
           one: `${formattedAuthorsCount} other`,
           other: `${formattedAuthorsCount} others`,
-        })} liked your post`
-      : l`${firstAuthorName} liked your post`
+        })} sparked your post`
+      : l`${firstAuthorName} sparked your post`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -311,10 +311,10 @@ let NotificationFeedItem = ({
             other={`${formattedAuthorsCount} others`}
           />
         </Text>{' '}
-        liked your post
+        sparked your post
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} liked your post</Trans>
+      <Trans>{firstAuthorLink} sparked your post</Trans>
     )
   } else if (item.type === 'repost') {
     a11yLabel = hasMultipleAuthors
@@ -393,8 +393,8 @@ let NotificationFeedItem = ({
       ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
           one: `${formattedAuthorsCount} other`,
           other: `${formattedAuthorsCount} others`,
-        })} liked your custom feed`
-      : l`${firstAuthorName} liked your custom feed`
+        })} sparked your custom feed`
+      : l`${firstAuthorName} sparked your custom feed`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -405,10 +405,10 @@ let NotificationFeedItem = ({
             other={`${formattedAuthorsCount} others`}
           />
         </Text>{' '}
-        liked your custom feed
+        sparked your custom feed
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} liked your custom feed</Trans>
+      <Trans>{firstAuthorLink} sparked your custom feed</Trans>
     )
   } else if (item.type === 'starterpack-joined') {
     a11yLabel = hasMultipleAuthors
@@ -490,8 +490,8 @@ let NotificationFeedItem = ({
       ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
           one: `${formattedAuthorsCount} other`,
           other: `${formattedAuthorsCount} others`,
-        })} liked your repost`
-      : l`${firstAuthorName} liked your repost`
+        })} sparked your repost`
+      : l`${firstAuthorName} sparked your repost`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -502,10 +502,10 @@ let NotificationFeedItem = ({
             other={`${formattedAuthorsCount} others`}
           />
         </Text>{' '}
-        liked your repost
+        sparked your repost
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} liked your repost</Trans>
+      <Trans>{firstAuthorLink} sparked your repost</Trans>
     )
   } else if (item.type === 'repost-via-repost') {
     a11yLabel = hasMultipleAuthors

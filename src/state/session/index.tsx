@@ -21,6 +21,7 @@ import {
   type BskyAppAgent,
   createAgentAndCreateAccount,
   createAgentAndLogin,
+  createAgentAndOAuthLogin,
   createAgentAndResume,
   sessionAccountToSession,
 } from './agent'
@@ -53,6 +54,7 @@ AgentContext.displayName = 'SessionAgentContext'
 const ApiContext = createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
+  loginWithOAuth: async () => {},
   logoutCurrentAccount: () => {},
   logoutEveryAccount: () => {},
   resumeSession: async () => {},
@@ -178,6 +180,34 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
     [ax, store, onAgentSessionChange, cancelPendingTask],
+  )
+
+  const loginWithOAuth = useCallback<SessionApiContext['loginWithOAuth']>(
+    async (oauthSession, logContext) => {
+      addSessionDebugLog({type: 'method:start', method: 'loginWithOAuth'})
+      const signal = cancelPendingTask()
+      const {agent, account} = await createAgentAndOAuthLogin(oauthSession)
+
+      if (signal.aborted) {
+        return
+      }
+      store.dispatch({
+        type: 'switched-to-account',
+        newAgent: agent,
+        newAccount: account,
+      })
+      ax.metric(
+        'account:loggedIn',
+        {logContext, withPassword: false},
+        {session: utils.accountToSessionMetadata(account)},
+      )
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'loginWithOAuth',
+        account,
+      })
+    },
+    [ax, store, cancelPendingTask],
   )
 
   const logoutCurrentAccount = useCallback<
@@ -362,6 +392,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       createAccount,
       login,
+      loginWithOAuth,
       logoutCurrentAccount,
       logoutEveryAccount,
       resumeSession,
@@ -371,6 +402,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [
       createAccount,
       login,
+      loginWithOAuth,
       logoutCurrentAccount,
       logoutEveryAccount,
       resumeSession,

@@ -23,7 +23,17 @@ export function isJwtExpired(token: string) {
 }
 
 export function isAppPassword(token: string) {
-  const payload = jwtDecode(token)
-  // @ts-ignore
-  return payload.scope === 'com.atproto.appPass'
+  try {
+    const payload = jwtDecode(token)
+    // @ts-ignore
+    return payload.scope === 'com.atproto.appPass'
+  } catch {
+    /*
+     * OAuth sessions carry no access JWT to decode - their tokens are
+     * DPoP-bound and held by the OAuth client - so callers pass an empty
+     * string. An undecodable token simply is not an app password; throwing
+     * here takes down the whole render.
+     */
+    return false
+  }
 }

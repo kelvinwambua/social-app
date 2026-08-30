@@ -155,7 +155,7 @@ export function useNotificationsHandler() {
     void Notifications.setNotificationChannelAsync(
       'like' satisfies NotificationReason,
       {
-        name: l`Likes`,
+        name: l`Sparks`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
@@ -197,7 +197,7 @@ export function useNotificationsHandler() {
     void Notifications.setNotificationChannelAsync(
       'like-via-repost' satisfies NotificationReason,
       {
-        name: l`Likes of your reposts`,
+        name: l`Sparks of your reposts`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )

@@ -1197,7 +1197,7 @@ function PlayPauseTapArea({
         post.author.handle,
         '@',
       )}. Tap to play or pause the video`}
-      accessibilityHint={l`Double tap to like`}
+      accessibilityHint={l`Double tap to spark`}
       onPress={onPress}
       style={[a.absolute, a.inset_0, a.z_10]}>
       <View />

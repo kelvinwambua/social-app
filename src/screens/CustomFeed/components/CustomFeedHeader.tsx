@@ -29,14 +29,14 @@ import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ShareIcon} from '#/comp
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon,
-  Heart2_Stroke2_Corner0_Rounded as HeartIcon,
-} from '#/components/icons/Heart2'
-import {
   Pin_Filled_Corner0_Rounded as PinFilledIcon,
   Pin_Stroke2_Corner0_Rounded as PinIcon,
 } from '#/components/icons/Pin'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {
+  Spark_Filled_Stroke2_Corner0_Rounded as SparkFilledIcon,
+  Spark_Stroke2_Corner0_Rounded as SparkIcon,
+} from '#/components/icons/Spark'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -297,7 +297,7 @@ export function CustomFeedHeader({
                           {likeCount > 0 ? (
                             <View
                               style={[a.flex_row, a.align_center, {gap: 2}]}>
-                              <HeartFilledIcon
+                              <SparkFilledIcon
                                 size="xs"
                                 fill={
                                   likeUri
@@ -533,12 +533,13 @@ function DialogInner({
       {typeof likeCount === 'number' && likeCount > 0 ? (
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           <InlineLinkText
-            label={l`View users who like this feed`}
+            label={l`View users who sparked this feed`}
             to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
             style={[a.underline, t.atoms.text_contrast_medium]}
             onPress={() => control.close()}>
             <Trans>
-              Liked by <Plural value={likeCount} one="# user" other="# users" />
+              Sparked by{' '}
+              <Plural value={likeCount} one="# user" other="# users" />
             </Trans>
           </InlineLinkText>
         </View>
@@ -549,19 +550,19 @@ function DialogInner({
             <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
               <Button
                 disabled={isLikePending || isUnlikePending}
-                label={l`Like this feed`}
+                label={l`Spark this feed`}
                 size="small"
                 color="secondary"
                 onPress={() => void onToggleLiked()}
                 style={[a.flex_1]}>
                 {isLiked ? (
-                  <HeartFilledIcon size="sm" fill={t.palette.pink} />
+                  <SparkFilledIcon size="sm" fill={t.palette.pink} />
                 ) : (
-                  <ButtonIcon icon={HeartIcon} />
+                  <ButtonIcon icon={SparkIcon} />
                 )}
 
                 <ButtonText>
-                  {isLiked ? <Trans>Unlike</Trans> : <Trans>Like</Trans>}
+                  {isLiked ? <Trans>Unspark</Trans> : <Trans>Spark</Trans>}
                 </ButtonText>
               </Button>
               <Button

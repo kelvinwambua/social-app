@@ -1,11 +1,14 @@
 import {useCallback, useEffect} from 'react'
-import {ScrollView, View} from 'react-native'
+import {Linking, ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {BSKY_BIRTHDATE_SETTINGS_URL} from '#/lib/constants'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
-import {useSessionApi} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
+import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {DeleteAccountDialog} from '#/screens/Settings/components/DeleteAccountDialog'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -18,7 +21,6 @@ import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
-import {Full as Logo} from '#/components/icons/Logo'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
@@ -28,7 +30,10 @@ import {Text} from '#/components/Typography'
 import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
 import {DeviceSignalsNotice} from '#/ageAssurance/components/DeviceSignalsNotice'
-import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
+import {
+  useAgeAssuranceServerDataContext,
+  useOtherRequiredDataQuery,
+} from '#/ageAssurance/data'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {useAgeAssuranceVerificationFlow} from '#/ageAssurance/useVerificationFlow'
 import {
@@ -56,6 +61,31 @@ export function NoAccessScreen() {
   const region = useAgeAssuranceRegionConfig()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {logoutCurrentAccount} = useSessionApi()
+  const {currentAccount} = useSession()
+  const isOAuthAccount = currentAccount?.authMethod === 'oauth'
+  const otherRequiredData = useOtherRequiredDataQuery()
+
+  /*
+   * OAuth users set their birthdate on Bluesky in another tab, so nothing in
+   * this app knows it changed. The query holding `declaredAge` is cached in a
+   * persisted client and would not refetch on its own. Re-check whenever the
+   * user comes back to the tab, so returning from Bluesky clears the gate
+   * without a manual reload.
+   */
+  useEffect(() => {
+    if (!IS_WEB || !isOAuthAccount) return
+    const recheck = () => {
+      if (document.visibilityState === 'visible') {
+        void otherRequiredData.refetch()
+      }
+    }
+    window.addEventListener('focus', recheck)
+    document.addEventListener('visibilitychange', recheck)
+    return () => {
+      window.removeEventListener('focus', recheck)
+      document.removeEventListener('visibilitychange', recheck)
+    }
+  }, [isOAuthAccount, otherRequiredData])
   const geolocation = useGeolocation()
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
   const locationControl = Dialog.useDialogControl()
@@ -288,15 +318,45 @@ export function NoAccessScreen() {
                       and exploring in no time!
                     </Trans>
                   </Text>
-                  <Button
-                    color="primary"
-                    size="large"
-                    label={l`Click here to update your birthdate`}
-                    onPress={() => birthdateControl.open()}>
-                    <ButtonText>
-                      <Trans>Add your birthdate</Trans>
-                    </ButtonText>
-                  </Button>
+                  {isOAuthAccount ? (
+                    /*
+                     * OAuth sessions run on the `transition:generic` scope,
+                     * which the PDS treats like an app password - it refuses
+                     * writes to personalDetailsPref. So the birthdate has to
+                     * be set on Bluesky, where the account lives, and we read
+                     * it back afterwards.
+                     */
+                    <>
+                      <Text style={[textStyles]}>
+                        <Trans>
+                          Because you signed in with Bluesky, your birthdate is
+                          set on your Bluesky account. Add it there, then come
+                          back and refresh this page.
+                        </Trans>
+                      </Text>
+                      <Button
+                        color="primary"
+                        size="large"
+                        label={l`Open Bluesky settings to add your birthdate`}
+                        onPress={() => {
+                          void Linking.openURL(BSKY_BIRTHDATE_SETTINGS_URL)
+                        }}>
+                        <ButtonText>
+                          <Trans>Add your birthdate on Bluesky</Trans>
+                        </ButtonText>
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      color="primary"
+                      size="large"
+                      label={l`Click here to update your birthdate`}
+                      onPress={() => birthdateControl.open()}>
+                      <ButtonText>
+                        <Trans>Add your birthdate</Trans>
+                      </ButtonText>
+                    </Button>
+                  )}
 
                   {orgAdmonition}
                 </View>
@@ -304,7 +364,10 @@ export function NoAccessScreen() {
             </View>
 
             <View style={[a.pt_lg, a.gap_xl, {maxWidth: 280}]}>
-              <Logo width={120} textFill={t.atoms.text.color} />
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <Logo width={32} fill={t.palette.primary_500} />
+                <Logotype width={120} fill={t.atoms.text.color} />
+              </View>
               <Text
                 style={[
                   a.text_sm,

@@ -20,8 +20,8 @@ import {BLUE_HUE} from '#/alf/util/colorGeneration'
 import {select} from '#/alf/util/themeSelector'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
-import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Spark_Stroke2_Corner0_Rounded as Spark} from '#/components/icons/Spark'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
@@ -223,7 +223,7 @@ export function VideoPostCard({
                   style={[a.relative, a.z_10, a.p_md, a.flex_row, a.gap_md]}>
                   {likeCount > 0 && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                      <Heart size="sm" fill="white" />
+                      <Spark size="sm" fill="white" />
                       <Text
                         style={[a.text_sm, a.font_semi_bold, {color: 'white'}]}>
                         {formatCount(i18n, likeCount)}
@@ -523,7 +523,7 @@ export function CompactVideoPostCard({
                     style={[a.relative, a.z_10, a.p_sm, a.flex_row, a.gap_md]}>
                     {likeCount > 0 && (
                       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                        <Heart size="sm" fill="white" />
+                        <Spark size="sm" fill="white" />
                         <Text
                           style={[
                             a.text_sm,

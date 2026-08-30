@@ -1,5 +1,7 @@
 import {createContext, useContext, useMemo, useState} from 'react'
 
+import {isOAuthSupported, startOAuthSignIn} from '#/lib/oauth/client'
+import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {useActiveLanding} from '#/state/shell/landing'
 import {IS_WEB} from '#/env'
@@ -92,11 +94,30 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }))
       },
       requestSwitchToAccount({requestedAccount}) {
-        setState(s => ({
-          ...s,
-          showLoggedOut: true,
-          requestedAccountSwitchTo: requestedAccount,
-        }))
+        const showLoggedOutView = () =>
+          setState(s => ({
+            ...s,
+            showLoggedOut: true,
+            requestedAccountSwitchTo: requestedAccount,
+          }))
+
+        /*
+         * Sign-up goes through Bluesky's hosted OAuth page, which runs the
+         * captcha we cannot implement ourselves. Every "create account" entry
+         * point funnels through here, so intercepting once covers all of them.
+         *
+         * Falls back to the in-app flow when OAuth is unsupported (native) or
+         * fails to start.
+         */
+        if (requestedAccount === 'new' && isOAuthSupported) {
+          startOAuthSignIn().catch(err => {
+            logger.error('oauth: failed to start sign up', {safeMessage: err})
+            showLoggedOutView()
+          })
+          return
+        }
+
+        showLoggedOutView()
       },
       clearRequestedAccount() {
         setState(s => ({

@@ -22,10 +22,7 @@ import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/componen
 import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
 import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
-import {
-  Heart2_Stroke2_Corner0_Rounded as HeartIcon,
-  LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,
-} from '#/components/icons/Heart2'
+import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/Heart2'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import {PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon} from '#/components/icons/Quote'
@@ -34,6 +31,7 @@ import {
   RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
 } from '#/components/icons/Repost'
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
+import {Spark_Stroke2_Corner0_Rounded as SparkIcon} from '#/components/icons/Spark'
 import * as Layout from '#/components/Layout'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 import * as SettingsList from '../components/SettingsList'
@@ -151,12 +149,12 @@ export function NotificationSettingsScreen({}: Props) {
           )}
           <View style={[a.gap_sm]}>
             <SettingsList.PressableItem
-              label={l`Settings for like notifications`}
+              label={l`Settings for spark notifications`}
               onPress={likeDialogControl.open}
               contentContainerStyle={[a.align_start]}>
-              <SettingsList.ItemIcon icon={HeartIcon} />
+              <SettingsList.ItemIcon icon={SparkIcon} />
               <ItemTextWithSubtitle
-                titleText={<Trans>Likes</Trans>}
+                titleText={<Trans>Sparks</Trans>}
                 subtitleText={<SettingPreview preference={settings?.like} />}
                 showSkeleton={!settings}
               />
@@ -230,12 +228,12 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.PressableItem
-              label={l`Settings for notifications for likes of your reposts`}
+              label={l`Settings for notifications for sparks of your reposts`}
               onPress={likeRepostDialogControl.open}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={LikeRepostIcon} />
               <ItemTextWithSubtitle
-                titleText={<Trans>Likes of your reposts</Trans>}
+                titleText={<Trans>Sparks of your reposts</Trans>}
                 subtitleText={
                   <SettingPreview preference={settings?.likeViaRepost} />
                 }
@@ -310,10 +308,10 @@ export function NotificationSettingsScreen({}: Props) {
       <NotificationSettingsDialog
         control={likeDialogControl}
         name="like"
-        icon={HeartIcon}
-        titleText={<Trans>Likes</Trans>}
+        icon={SparkIcon}
+        titleText={<Trans>Sparks</Trans>}
         subtitleText={
-          <Trans>Get notifications when people like your posts.</Trans>
+          <Trans>Get notifications when people spark your posts.</Trans>
         }
       />
       <NotificationSettingsDialog
@@ -361,9 +359,9 @@ export function NotificationSettingsScreen({}: Props) {
         control={likeRepostDialogControl}
         name="likeViaRepost"
         icon={LikeRepostIcon}
-        titleText={<Trans>Likes of your reposts</Trans>}
+        titleText={<Trans>Sparks of your reposts</Trans>}
         subtitleText={
-          <Trans>Get notifications when people like your reposts.</Trans>
+          <Trans>Get notifications when people spark your reposts.</Trans>
         }
       />
       <NotificationSettingsDialog

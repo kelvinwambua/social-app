@@ -29,6 +29,15 @@ const accountSchema = z.object({
   status: z.string().optional(),
   pdsUrl: z.string().optional(),
   isSelfHosted: z.boolean().optional(),
+  /**
+   * How this account authenticated. Absent means password, so existing
+   * persisted accounts keep working untouched.
+   *
+   * OAuth accounts intentionally carry no `accessJwt`/`refreshJwt`: those
+   * tokens are DPoP-bound, so the key material lives in the OAuth client's own
+   * store and the session is resumed via `restoreOAuthSession(did)`.
+   */
+  authMethod: z.enum(['password', 'oauth']).optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 
@@ -134,7 +143,7 @@ const schema = z.object({
 export type Schema = z.infer<typeof schema>
 
 export const defaults: Schema = {
-  colorMode: 'system',
+  colorMode: 'light',
   darkTheme: 'dim',
   session: {
     accounts: [],

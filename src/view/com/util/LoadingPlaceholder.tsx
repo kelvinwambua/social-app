@@ -10,11 +10,11 @@ import {
 import {s} from '#/lib/styles'
 import {atoms as a, useTheme} from '#/alf'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
-import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {
+  Spark_Filled_Stroke2_Corner0_Rounded as SparkIconFilled,
+  Spark_Stroke2_Corner0_Rounded as SparkIconOutline,
+} from '#/components/icons/Spark'
 
 export function LoadingPlaceholder({
   width,
@@ -68,6 +68,19 @@ export function PostLoadingPlaceholder({
         <View style={styles.postCtrls}>
           <View style={[styles.postCtrl, {marginLeft: -6}]}>
             <View style={styles.postBtn}>
+              <SparkIconOutline
+                style={[
+                  {
+                    color: t.palette.contrast_500,
+                  },
+                  {pointerEvents: 'none'},
+                ]}
+                width={18}
+              />
+            </View>
+          </View>
+          <View style={styles.postCtrl}>
+            <View style={styles.postBtn}>
               <Bubble
                 style={[
                   {
@@ -82,19 +95,6 @@ export function PostLoadingPlaceholder({
           <View style={styles.postCtrl}>
             <View style={styles.postBtn}>
               <Repost
-                style={[
-                  {
-                    color: t.palette.contrast_500,
-                  },
-                  {pointerEvents: 'none'},
-                ]}
-                width={18}
-              />
-            </View>
-          </View>
-          <View style={styles.postCtrl}>
-            <View style={styles.postBtn}>
-              <HeartIconOutline
                 style={[
                   {
                     color: t.palette.contrast_500,
@@ -138,7 +138,7 @@ export function NotificationLoadingPlaceholder({
   return (
     <View style={[styles.notification, style]}>
       <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
-        <HeartIconFilled size="xl" style={{color: t.palette.contrast_50}} />
+        <SparkIconFilled size="xl" style={{color: t.palette.contrast_50}} />
       </View>
       <View style={{flex: 1}}>
         <View style={[a.flex_row, s.mb10]}>

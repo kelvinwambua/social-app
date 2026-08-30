@@ -295,12 +295,12 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="CustomFeedLikedBy"
         getComponent={() => CustomFeedLikedByScreen}
-        options={{title: title(msg`Liked by`)}}
+        options={{title: title(msg`Sparked by`)}}
       />
       <Stack.Screen
         name="ProfileLabelerLikedBy"
         getComponent={() => ProfileLabelerLikedByScreen}
-        options={{title: title(msg`Liked by`)}}
+        options={{title: title(msg`Sparked by`)}}
       />
       <Stack.Screen
         name="Debug"

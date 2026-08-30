@@ -5,6 +5,8 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {isOAuthSupported, startOAuthSignIn} from '#/lib/oauth/client'
+import {logger} from '#/logger'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
@@ -45,6 +47,27 @@ export const SplashScreen = ({
       })
     }
   }, [])
+
+  /*
+   * Send people to Bluesky's hosted authorization page to sign up. We pass the
+   * host rather than a handle so no `login_hint` is derived, which is what
+   * makes that page offer account creation - and lets Bluesky run the captcha
+   * instead of us reimplementing it.
+   *
+   * Falls back to the in-app signup flow if OAuth is unavailable or fails.
+   */
+  const onPressCreateAccountViaOAuth = async () => {
+    if (!isOAuthSupported) {
+      onPressCreateAccount()
+      return
+    }
+    try {
+      await startOAuthSignIn()
+    } catch (err) {
+      logger.error('oauth: failed to start sign up', {safeMessage: err})
+      onPressCreateAccount()
+    }
+  }
 
   const logoVariant = useLogoVariant()
   const kawaii = logoVariant === 'kawaii'
@@ -97,7 +120,7 @@ export const SplashScreen = ({
                   a.font_semi_bold,
                   t.atoms.text_contrast_medium,
                 ]}>
-                <Trans>What's up?</Trans>
+                <Trans>Spark the best in people</Trans>
               </Text>
             </View>
 
@@ -106,10 +129,10 @@ export const SplashScreen = ({
               style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
               <Button
                 testID="createAccountButton"
-                onPress={onPressCreateAccount}
+                onPress={() => void onPressCreateAccountViaOAuth()}
                 label={_(msg`Create new account`)}
                 accessibilityHint={_(
-                  msg`Opens flow to create a new Bluesky account`,
+                  msg`Opens flow to create a new Sparkable account`,
                 )}
                 size="large"
                 variant="solid"
@@ -123,7 +146,7 @@ export const SplashScreen = ({
                 onPress={onPressSignin}
                 label={_(msg`Sign in`)}
                 accessibilityHint={_(
-                  msg`Opens flow to sign in to your existing Bluesky account`,
+                  msg`Opens flow to sign in to your existing Sparkable account`,
                 )}
                 size="large"
                 variant="solid"
@@ -166,20 +189,20 @@ function Footer() {
         t.atoms.border_contrast_medium,
       ]}>
       <InlineLinkText
-        label={_(msg`Learn more about Bluesky`)}
-        to="https://bsky.social">
-        <Trans>Business</Trans>
+        label={_(msg`Learn more about Sparkable`)}
+        to="https://blog.sparkable.cc/about">
+        <Trans>About</Trans>
       </InlineLinkText>
       <InlineLinkText
-        label={_(msg`Read the Bluesky blog`)}
-        to="https://bsky.social/about/blog">
+        label={_(msg`Read the Sparkable blog`)}
+        to="https://blog.sparkable.cc/">
         <Trans>Blog</Trans>
       </InlineLinkText>
       <InlineLinkText
-        label={_(msg`See jobs at Bluesky`)}
-        to="https://bsky.social/about/join">
-        <Trans comment="Link to a page with job openings at Bluesky">
-          Jobs
+        label={_(msg`Volunteer with Sparkable`)}
+        to="https://blog.sparkable.cc/volunteer">
+        <Trans comment="Link to a page about volunteering with Sparkable">
+          Volunteer
         </Trans>
       </InlineLinkText>
 

@@ -1,11 +1,5 @@
 import {forwardRef, useCallback, useEffect, useState} from 'react'
-import {
-  AccessibilityInfo,
-  Image as RNImage,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native'
+import {AccessibilityInfo, StyleSheet, useColorScheme, View} from 'react-native'
 import Animated, {
   Easing,
   interpolate,
@@ -16,32 +10,23 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, type SvgProps} from 'react-native-svg'
 import {scheduleOnRN} from 'react-native-worklets'
-import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
-// @ts-ignore
-import splashImagePointer from '../assets/splash/splash.png'
-// @ts-ignore
-import darkSplashImagePointer from '../assets/splash/splash-dark.png'
-const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
-const darkSplashImageUri = RNImage.resolveAssetSource(
-  darkSplashImagePointer,
-).uri
 
 export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
-  const height = width * (67 / 64)
+  const height = width
   return (
     <Svg
       fill="none"
       // @ts-ignore it's fiiiiine
       ref={ref}
-      viewBox="0 0 64 66"
+      viewBox="0 0 64 64"
       style={[{width, height}, props.style]}>
       <Path
-        fill={props.fill || '#fff'}
-        d="M13.873 3.77C21.21 9.243 29.103 20.342 32 26.3v15.732c0-.335-.13.043-.41.858-1.512 4.414-7.418 21.642-20.923 7.87-7.111-7.252-3.819-14.503 9.125-16.692-7.405 1.252-15.73-.817-18.014-8.93C1.12 22.804 0 8.431 0 6.488 0-3.237 8.579-.18 13.873 3.77ZM50.127 3.77C42.79 9.243 34.897 20.342 32 26.3v15.732c0-.335.13.043.41.858 1.512 4.414 7.418 21.642 20.923 7.87 7.111-7.252 3.819-14.503-9.125-16.692 7.405 1.252 15.73-.817 18.014-8.93C62.88 22.804 64 8.431 64 6.488 64-3.237 55.422-.18 50.127 3.77Z"
+        fill={props.fill || '#4153F5'}
+        d="M63 1C44 24 44 40 63 63C40 44 24 44 1 63C20 40 20 24 1 1C24 20 40 20 63 1Z"
       />
     </Svg>
   )
@@ -59,24 +44,26 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const outroApp = useSharedValue(0)
   const outroAppOpacity = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
-  const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [isLayoutReady, setIsLayoutReady] = useState(false)
   const [reduceMotion, setReduceMotion] = useState<boolean | undefined>(false)
   const isReady =
-    props.isReady &&
-    isImageLoaded &&
-    isLayoutReady &&
-    reduceMotion !== undefined
+    props.isReady && isLayoutReady && reduceMotion !== undefined
 
   const colorScheme = useColorScheme()
   const isDarkMode = colorScheme === 'dark'
 
   const logoAnimation = useAnimatedStyle(() => {
     const introScale = interpolate(intro.get(), [0, 1], [0.8, 1], 'clamp')
+    /*
+     * Upstream blew this up to 500x so the (white) logo acted as a wipe that
+     * revealed the app. The Sparkable mark is brand blue, so scaling it to
+     * full-bleed floods the viewport with blue before the app paints. Keep the
+     * mark at its natural size and let the crossfade handle the transition.
+     */
     const outroScale =
       reduceMotion === true
         ? 1
-        : interpolate(outroLogo.get(), [0, 0.08, 1], [1, 0.8, 500], 'clamp')
+        : interpolate(outroLogo.get(), [0, 0.08, 1], [1, 0.96, 1.15], 'clamp')
 
     const introOpacity = interpolate(intro.get(), [0, 1], [0, 1], 'clamp')
     const outroOpacity = interpolate(
@@ -118,7 +105,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
   const onFinish = useCallback(() => setIsAnimationComplete(true), [])
   const onLayout = useCallback(() => setIsLayoutReady(true), [])
-  const onLoadEnd = useCallback(() => setIsImageLoaded(true), [])
 
   useEffect(() => {
     if (isReady) {
@@ -164,18 +150,16 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion)
   }, [])
 
-  // special off-spec color for dark mode
-  const logoBg = isDarkMode ? '#0F1824' : '#fff'
+  const logoFill = '#4153F5'
+  const backgroundColor = isDarkMode ? '#000' : '#fff'
+  const wordmarkFill = isDarkMode ? '#fff' : '#000'
 
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
         <View style={StyleSheet.absoluteFillObject}>
-          <Image
-            accessibilityIgnoresInvertColors
-            onLoadEnd={onLoadEnd}
-            source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
-            style={StyleSheet.absoluteFillObject}
+          <View
+            style={[StyleSheet.absoluteFillObject, {backgroundColor}]}
           />
 
           <Animated.View
@@ -191,7 +175,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 opacity: 0,
               },
             ]}>
-            <Logotype fill="#fff" width={90} />
+            <Logotype fill={wordmarkFill} width={90} />
           </Animated.View>
         </View>
       )}
@@ -213,7 +197,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                   alignItems: 'center',
                 },
               ]}>
-              <Logo fill={logoBg} />
+              <Logo fill={logoFill} />
             </Animated.View>
           )}
         </>

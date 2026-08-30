@@ -1,3 +1,5 @@
+import {type OAuthSession} from '@atproto/oauth-client-browser'
+
 import {type PersistedAccount} from '#/state/persisted'
 import {type Metrics} from '#/analytics/metrics'
 
@@ -30,6 +32,16 @@ export type SessionApiContext = {
       password: string
       authFactorToken?: string | undefined
     },
+    logContext: Metrics['account:loggedIn']['logContext'],
+  ) => Promise<void>
+  /**
+   * Completes an OAuth authorization: takes the session handed back by the
+   * authorization server and makes it the active account. Sign-*up* runs
+   * through here too, since Bluesky's hosted page creates the account before
+   * redirecting back.
+   */
+  loginWithOAuth: (
+    oauthSession: OAuthSession,
     logContext: Metrics['account:loggedIn']['logContext'],
   ) => Promise<void>
   logoutCurrentAccount: (

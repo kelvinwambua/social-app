@@ -19,7 +19,7 @@ export const CustomFeedLikedByScreen = ({route}: Props) => {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Liked By</Trans>
+            <Trans>Sparked By</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />

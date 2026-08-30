@@ -51,6 +51,20 @@ function updateDocument(theme: ThemeName) {
     html.classList.add(`theme--${theme}`)
     // set color to 'theme-color' meta tag
     meta?.setAttribute('content', getBackgroundColor(theme))
+    /*
+     * Paint the document itself, not just the React tree. The HTML shell
+     * differs per bundler (Metro serves its own template, webpack uses
+     * web/index.html), and Metro's template sets no background at all - so
+     * without this the area outside the app canvas (overscroll, pre-paint)
+     * shows through instead of the theme background.
+     */
+    const backgroundColor = getBackgroundColor(theme)
+    html.style.backgroundColor = backgroundColor
+    // @ts-ignore web only
+    if (window.document.body) {
+      // @ts-ignore web only
+      window.document.body.style.backgroundColor = backgroundColor
+    }
     window.localStorage.setItem('ALF_THEME', theme)
   }
 }

@@ -49,7 +49,11 @@ RUN echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
   echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
   echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# NOTE: no BuildKit cache mount here. Railway requires cache-mount ids to be
+# prefixed with its own cache key, and a plain `id=pnpm` fails validation. The
+# mount is only a build-speed optimization, so dropping it keeps this
+# Dockerfile portable across Railway, Hetzner and local builds.
+RUN pnpm install --frozen-lockfile
 
 RUN pnpm intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi

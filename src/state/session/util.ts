@@ -14,11 +14,21 @@ export function readLastActiveAccount() {
 
 export function isSignupQueued(accessJwt: string | undefined) {
   if (accessJwt) {
-    const sessData = jwtDecode(accessJwt)
-    return (
-      hasProp(sessData, 'scope') &&
-      sessData.scope === 'com.atproto.signupQueued'
-    )
+    try {
+      const sessData = jwtDecode(accessJwt)
+      return (
+        hasProp(sessData, 'scope') &&
+        sessData.scope === 'com.atproto.signupQueued'
+      )
+    } catch {
+      /*
+       * OAuth accounts have no access JWT, and anything else undecodable is
+       * not a queued signup either. jwt-decode throws from inside its own
+       * catch block once minified, which surfaces as a bare "e is not
+       * defined" and takes down the render if it escapes.
+       */
+      return false
+    }
   }
   return false
 }

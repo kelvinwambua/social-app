@@ -151,3 +151,69 @@ export const APP_CONFIG_PROD_URL = `https://app-config.workers.bsky.app`
 export const APP_CONFIG_URL = IS_DEV
   ? (APP_CONFIG_DEV_URL ?? APP_CONFIG_PROD_URL)
   : APP_CONFIG_PROD_URL
+
+/**
+ * Origin that serves the web app and, with it, the atproto OAuth client
+ * metadata document. The `client_id` *is* a URL, and the authorization server
+ * fetches it, so this must be a public HTTPS origin we control and must match
+ * the origin the app is actually served from.
+ *
+ * Leave unset for local development: atproto treats `http://localhost` as a
+ * special "development" client and skips the metadata fetch.
+ */
+export const OAUTH_CLIENT_ORIGIN: string | undefined =
+  process.env.EXPO_PUBLIC_OAUTH_CLIENT_ORIGIN
+
+/**
+ * Scopes we request. `atproto` is mandatory; `transition:generic` grants the
+ * broad repo access this app needs, and `transition:chat.bsky` covers DMs.
+ */
+export const OAUTH_SCOPE = 'atproto transition:generic transition:chat.bsky'
+
+/**
+ * Resolves the origin to use for OAuth.
+ *
+ * Prefers the configured value, but falls back to the origin the page is
+ * actually served from. That fallback is what lets tunnels (ngrok) and preview
+ * deployments work without a rebuild, since `client_id` is only ever read at
+ * runtime. Loopback origins are excluded: they are not publicly fetchable, so
+ * they have to use the dedicated development client instead.
+ */
+function resolveOAuthOrigin(): string | undefined {
+  if (OAUTH_CLIENT_ORIGIN) return OAUTH_CLIENT_ORIGIN
+  const origin =
+    typeof window !== 'undefined' ? window.location?.origin : undefined
+  if (
+    origin &&
+    !origin.startsWith('http://localhost') &&
+    !origin.startsWith('http://127.0.0.1')
+  ) {
+    return origin
+  }
+  return undefined
+}
+
+/**
+ * Where the authorization server sends people back to. Registered in the
+ * client metadata, so it has to line up exactly with what we serve there.
+ */
+export function getOAuthRedirectUri(): string {
+  return `${resolveOAuthOrigin() ?? 'http://localhost:19006'}/oauth/callback`
+}
+
+/**
+ * The OAuth `client_id`. For localhost we use the documented development form,
+ * which encodes redirect/scope in the query string instead of requiring a
+ * hosted document.
+ */
+export function getOAuthClientId(): string {
+  const origin = resolveOAuthOrigin()
+  if (!origin) {
+    const params = new URLSearchParams({
+      redirect_uri: getOAuthRedirectUri(),
+      scope: OAUTH_SCOPE,
+    })
+    return `http://localhost?${params.toString()}`
+  }
+  return `${origin}/client-metadata.json`
+}

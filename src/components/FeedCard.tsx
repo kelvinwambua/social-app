@@ -247,7 +247,7 @@ export function Likes({count}: {count: number}) {
   return (
     <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_semi_bold]}>
       <Trans>
-        Liked by <Plural value={count || 0} one="# user" other="# users" />
+        Sparked by <Plural value={count || 0} one="# user" other="# users" />
       </Trans>
     </Text>
   )

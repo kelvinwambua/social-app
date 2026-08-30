@@ -28,10 +28,10 @@ export const PostLikedByScreen = ({route}: Props) => {
           {post && (
             <>
               <Layout.Header.TitleText>
-                <Trans>Liked By</Trans>
+                <Trans>Sparked By</Trans>
               </Layout.Header.TitleText>
               <Layout.Header.SubtitleText>
-                <Plural value={likeCount ?? 0} one="# like" other="# likes" />
+                <Plural value={likeCount ?? 0} one="# spark" other="# sparks" />
               </Layout.Header.SubtitleText>
             </>
           )}

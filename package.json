@@ -1,5 +1,5 @@
 {
-  "name": "bsky.app",
+  "name": "sparkable",
   "version": "1.131.0",
   "private": true,
   "engines": {
@@ -98,6 +98,7 @@
   "dependencies": {
     "@atproto/api": "0.20.39",
     "@atproto/common-web": "0.5.7",
+    "@atproto/oauth-client-browser": "^0.5.4",
     "@atproto/syntax": "0.7.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",

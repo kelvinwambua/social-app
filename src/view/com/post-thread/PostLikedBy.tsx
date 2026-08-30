@@ -81,9 +81,9 @@ export function PostLikedBy({uri}: {uri: string}) {
         isLoading={isLoadingUri || isLoadingLikes}
         isError={isError}
         emptyType="results"
-        emptyTitle={_(msg`No likes yet`)}
+        emptyTitle={_(msg`No sparks yet`)}
         emptyMessage={_(
-          msg`Nobody has liked this yet. Maybe you should be the first!`,
+          msg`Nobody has sparked this yet. Maybe you should be the first!`,
         )}
         errorMessage={cleanError(resolveError || error)}
         sideBorders={false}

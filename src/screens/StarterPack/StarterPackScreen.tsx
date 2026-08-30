@@ -475,7 +475,7 @@ function Header({
           {richText ? <RichText value={richText} style={[a.text_md]} /> : null}
           {!hasSession ? (
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={_(msg`Join Sparkable`)}
               onPress={() => {
                 setActiveStarterPack({
                   uri: starterPack.uri,
@@ -485,7 +485,7 @@ function Header({
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
-                <Trans>Join Bluesky</Trans>
+                <Trans>Join Sparkable</Trans>
               </ButtonText>
             </Button>
           ) : null}

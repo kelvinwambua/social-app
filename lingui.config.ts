@@ -2,6 +2,12 @@ import {defineConfig} from '@lingui/cli'
 
 export default defineConfig({
   sourceLocale: 'en',
+  /*
+   * Translations for our rebranded strings lag behind the source language, and
+   * without a fallback Lingui renders the raw message ID (e.g. "bhV8Pa") in the
+   * UI. Fall back to English instead.
+   */
+  fallbackLocales: {default: 'en'},
   locales: [
     'en',
     'an',

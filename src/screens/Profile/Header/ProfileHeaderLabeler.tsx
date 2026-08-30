@@ -27,9 +27,9 @@ import {Button, ButtonText} from '#/components/Button'
 import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-  Heart2_Stroke2_Corner0_Rounded as Heart,
-} from '#/components/icons/Heart2'
+  Spark_Filled_Stroke2_Corner0_Rounded as SparkFilled,
+  Spark_Stroke2_Corner0_Rounded as Spark,
+} from '#/components/icons/Spark'
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -146,13 +146,13 @@ let ProfileHeaderLabeler = ({
                   size="small"
                   color="secondary"
                   shape="round"
-                  label={_(msg`Like this labeler`)}
+                  label={_(msg`Spark this labeler`)}
                   disabled={!hasSession || isLikePending || isUnlikePending}
                   onPress={onToggleLiked}>
                   {likeUri ? (
-                    <HeartFilled fill={t.palette.negative_400} />
+                    <SparkFilled fill={t.palette.negative_400} />
                   ) : (
-                    <Heart fill={t.atoms.text_contrast_medium.color} />
+                    <Spark fill={t.atoms.text_contrast_medium.color} />
                   )}
                 </Button>
 
@@ -166,7 +166,7 @@ let ProfileHeaderLabeler = ({
                     }}
                     size="tiny"
                     label={_(
-                      msg`Liked by ${plural(likeCount, {
+                      msg`Sparked by ${plural(likeCount, {
                         one: '# user',
                         other: '# users',
                       })}`,
@@ -181,7 +181,7 @@ let ProfileHeaderLabeler = ({
                             t.atoms.text_contrast_high,
                         ]}>
                         <Trans>
-                          Liked by{' '}
+                          Sparked by{' '}
                           <Plural
                             value={likeCount}
                             one="# user"

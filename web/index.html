@@ -17,6 +17,7 @@
     <link rel="preconnect" href="https://bsky.social">
     <link rel="preconnect" href="https://go.bsky.app">
     <title>%WEB_TITLE%</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path fill='%234153F5' d='M63 1C44 24 44 40 63 63C40 44 24 44 1 63C20 40 20 24 1 1C24 20 40 20 63 1Z'/></svg>">
 
     <link rel="preload" as="font" type="font/woff2" href="/static/media/InterVariable.c504db5c06caaf7cdfba.woff2" crossorigin>
     <link rel="stylesheet" href="/static/style.css">
@@ -77,6 +78,7 @@
         flex: 1 0 auto;
         min-height: 100%;
         width: 100%;
+        background-color: white;
       }
       html.theme--light,
       html.theme--light body,
@@ -131,6 +133,44 @@
       }
     </style>
     <script>
+      /*
+       * TEMPORARY boot-level error trap. Lives outside the app bundle so it
+       * also catches exceptions thrown while that bundle is evaluating, which
+       * otherwise render as a blank white page with nothing to explain why.
+       * Remove once OAuth sign-in is confirmed working.
+       */
+      (function () {
+        function show(label, detail) {
+          try {
+            var el = document.createElement('pre')
+            el.style.cssText =
+              'position:fixed;inset:0;z-index:99999;margin:0;padding:16px;' +
+              'background:#111;color:#f88;font:12px/1.4 monospace;' +
+              'white-space:pre-wrap;overflow:auto'
+            el.textContent = label + '
+
+' + detail
+            ;(document.body || document.documentElement).appendChild(el)
+          } catch (_) {}
+        }
+        window.addEventListener('error', function (e) {
+          show(
+            'Boot error:',
+            (e && e.message) + '
+' + ((e && e.error && e.error.stack) || ''),
+          )
+        })
+        window.addEventListener('unhandledrejection', function (e) {
+          var r = e && e.reason
+          show(
+            'Unhandled promise rejection:',
+            (r && (r.stack || r.message)) || String(r),
+          )
+        })
+      })()
+    </script>
+
+    <script>
       const theme = localStorage.getItem('ALF_THEME')
       if (theme) {
         document.documentElement.classList.add(`theme--${theme}`)
@@ -170,7 +210,7 @@
             <button
               type="submit"
               style="
-                background-color: #4630eb;
+                background-color: #4153F5;
                 border-radius: 100px;
                 border: none;
                 box-shadow: none;
@@ -190,8 +230,8 @@
 
     <!-- The root element for your Expo app. -->
     <div id="splash">
-      <!-- Bluesky SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57"><path fill="#006AFF" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"/></svg>
+      <!-- Sparkable SVG -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="#4153F5" d="M63 1C44 24 44 40 63 63C40 44 24 44 1 63C20 40 20 24 1 1C24 20 40 20 63 1Z"/></svg>
     </div>
     <div id="root">
     </div>

@@ -19,7 +19,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
+import {GREENEARTH_FEED_URI, GREENEARTH_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {GCTIME, STALE} from '#/state/queries'
@@ -400,11 +400,11 @@ export type SavedFeedSourceInfo = FeedSourceInfo & {
   savedFeed: AppBskyActorDefs.SavedFeed
 }
 
-const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
+const PWI_DEFAULT_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
-  displayName: 'Discover',
-  uri: DISCOVER_FEED_URI,
-  feedDescriptor: `feedgen|${DISCOVER_FEED_URI}`,
+  displayName: 'GreenEarth',
+  uri: GREENEARTH_FEED_URI,
+  feedDescriptor: `feedgen|${GREENEARTH_FEED_URI}`,
   route: {
     href: '/',
     name: 'Home',
@@ -419,8 +419,8 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   likeUri: '',
   // ---
   savedFeed: {
-    id: 'pwi-discover',
-    ...DISCOVER_SAVED_FEED,
+    id: 'pwi-default',
+    ...GREENEARTH_SAVED_FEED,
   },
   contentMode: undefined,
 }
@@ -458,7 +458,7 @@ export function usePinnedFeedsInfos() {
     enabled: !isLoadingPrefs,
     queryFn: async () => {
       if (!hasSession) {
-        return [PWI_DISCOVER_FEED_STUB]
+        return [PWI_DEFAULT_FEED_STUB]
       }
 
       let resolved = new Map<string, FeedSourceInfo>()

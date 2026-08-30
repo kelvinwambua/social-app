@@ -4,9 +4,9 @@ import {useReducedMotion} from 'react-native-reanimated'
 
 import {useTheme} from '#/alf'
 import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
+  Spark_Filled_Stroke2_Corner0_Rounded as SparkIconFilled,
+  Spark_Stroke2_Corner0_Rounded as SparkIconOutline,
+} from '#/components/icons/Spark'
 
 const animationConfig = {
   duration: 600,
@@ -73,10 +73,10 @@ export function AnimatedLikeIcon({
       {isLiked ? (
         // @ts-expect-error is div
         <View ref={likeIconRef}>
-          <HeartIconFilled style={{color: t.palette.pink}} width={size} />
+          <SparkIconFilled style={{color: t.palette.pink}} width={size} />
         </View>
       ) : (
-        <HeartIconOutline
+        <SparkIconOutline
           style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
           width={size}
         />

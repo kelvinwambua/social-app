@@ -11,12 +11,17 @@ export const BSKY_SERVICE = 'https://bsky.social'
 export const BSKY_SERVICE_DID = 'did:web:bsky.social'
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
-const HELP_DESK_LANG = 'en-us'
-export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
+export const HELP_DESK_URL = 'https://blog.sparkable.cc/contact'
+
+/**
+ * Where an OAuth user goes to set their birthdate. The `transition:generic`
+ * scope cannot write personalDetailsPref, so this has to happen on Bluesky.
+ */
+export const BSKY_BIRTHDATE_SETTINGS_URL = 'https://bsky.app/settings/account'
 export const CHAT_SERVICE = 'https://api.bsky.chat'
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
-export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
+export const BSKY_DOWNLOAD_URL = 'https://sparkable.cc'
 export const STARTER_PACK_MAX_SIZE = 150
 export const CARD_ASPECT_RATIO = 1200 / 630
 
@@ -40,23 +45,11 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:2dzyut5lxna5ljiaasgeuffz': true, // darrin.bsky.team
 }
 
-const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
-export function FEEDBACK_FORM_URL({
-  email,
-  handle,
-}: {
-  email?: string
-  handle?: string
-}): string {
-  let str = BASE_FEEDBACK_FORM_URL
-  if (email) {
-    str += `?tf_anonymous_requester_email=${encodeURIComponent(email)}`
-    if (handle) {
-      str += `&tf_17205412673421=${encodeURIComponent(handle)}`
-    }
-  }
-  return str
-}
+/**
+ * Feedback and help both point at the same contact page, which is a plain
+ * content page rather than a ticketing form, so there is nothing to prefill.
+ */
+export const FEEDBACK_FORM_URL = HELP_DESK_URL
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
@@ -122,7 +115,7 @@ export function LINK_META_PROXY(_serviceUrl: string) {
   return PROD_LINK_META_PROXY
 }
 
-export const STATUS_PAGE_URL = 'https://status.bsky.app/'
+export const STATUS_PAGE_URL = 'https://sparkable.cc/status'
 
 // Hitslop constants
 export const createHitslop = (size: number): Insets => ({
@@ -139,6 +132,13 @@ export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
 
 export const BSKY_APP_ACCOUNT_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur'
+
+/**
+ * Accounts every new user is made to follow when they finish onboarding.
+ * Upstream seeded this with the Bluesky account, which showed a Bluesky avatar
+ * in the "follow 10 people" guide. Add the Sparkable account DID here.
+ */
+export const DEFAULT_FOLLOW_DIDS: string[] = []
 
 export const BSKY_FEED_OWNER_DIDS = [
   BSKY_APP_ACCOUNT_DID,
@@ -161,6 +161,17 @@ export const DISCOVER_SAVED_FEED = {
   value: DISCOVER_FEED_URI,
   pinned: true,
 }
+/**
+ * GreenEarth is the feed we land people on by default, so it is pinned first
+ * everywhere we write a set of starting feeds.
+ */
+export const GREENEARTH_FEED_URI =
+  'at://did:plc:wrmpulygwvuhjn2c3jbalgqj/app.bsky.feed.generator/your-feed'
+export const GREENEARTH_SAVED_FEED = {
+  type: 'feed',
+  value: GREENEARTH_FEED_URI,
+  pinned: true,
+}
 export const TIMELINE_SAVED_FEED = {
   type: 'timeline',
   value: 'following',
@@ -175,7 +186,7 @@ export const VIDEO_SAVED_FEED = {
 export const RECOMMENDED_SAVED_FEEDS: Pick<
   AppBskyActorDefs.SavedFeed,
   'type' | 'value' | 'pinned'
->[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
+>[] = [GREENEARTH_SAVED_FEED, DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
 
 export const KNOWN_SHUTDOWN_FEEDS = [
   'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm', // for you by skygaze
@@ -217,14 +228,13 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
-      findFriendsAnnouncement:
-        'https://bsky.social/about/blog/12-16-2025-find-friends',
-      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
-      searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
+      findFriendsAnnouncement: 'https://sparkable.cc/blog/find-friends',
+      initialVerificationAnnouncement: `https://sparkable.cc/blog/verification`,
+      searchTipsAndTricks: 'https://sparkable.cc/blog/search',
     },
     support: {
       findFriendsPrivacyPolicy:
-        'https://bsky.social/about/support/find-friends-privacy-policy',
+        'https://sparkable.cc/support/find-friends-privacy-policy',
     },
   },
 }
@@ -260,8 +270,9 @@ export const BLUESKY_NOTIF_SERVICE_HEADERS = {
 }
 
 export const webLinks = {
-  tos: `https://bsky.social/about/support/tos`,
-  privacy: `https://bsky.social/about/support/privacy-policy`,
-  community: `https://bsky.social/about/support/community-guidelines`,
-  communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
+  legal: `https://blog.sparkable.cc/legal/`,
+  tos: `https://blog.sparkable.cc/terms-of-use/`,
+  privacy: `https://blog.sparkable.cc/privacy-policy/`,
+  community: `https://blog.sparkable.cc/acceptable-use-policy/`,
+  communityDeprecated: `https://blog.sparkable.cc/acceptable-use-policy/`,
 }

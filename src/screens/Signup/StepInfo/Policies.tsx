@@ -5,6 +5,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {webLinks} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
@@ -22,8 +23,12 @@ export const Policies = ({
     return <View />
   }
 
-  const tos = validWebLink(serviceDescription.links?.termsOfService)
-  const pp = validWebLink(serviceDescription.links?.privacyPolicy)
+  /*
+   * Always link to Sparkable's own policies rather than whatever the user's
+   * hosting service reports, so the rebranded auth flow stays consistent.
+   */
+  const tos = webLinks.tos
+  const pp = webLinks.privacy
 
   if (!tos && !pp) {
     return (
@@ -43,14 +48,14 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the Sparkable Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
         </InlineLinkText>{' '}
         and{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the Sparkable Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy
@@ -63,7 +68,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the Sparkable Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
@@ -76,7 +81,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the Sparkable Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy
@@ -91,10 +96,4 @@ export const Policies = ({
   return els ? (
     <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>{els}</Text>
   ) : null
-}
-
-function validWebLink(url?: string): string | undefined {
-  return url && (url.startsWith('http://') || url.startsWith('https://'))
-    ? url
-    : undefined
 }

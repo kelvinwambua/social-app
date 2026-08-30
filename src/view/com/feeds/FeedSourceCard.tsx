@@ -171,7 +171,7 @@ export function FeedSourceCardLoaded({
             a.leading_snug,
           ]}>
           <Trans>
-            Liked by{' '}
+            Sparked by{' '}
             <Plural value={feed.likeCount || 0} one="# user" other="# users" />
           </Trans>
         </Text>
@@ -186,7 +186,7 @@ export function FeedSourceCardLoaded({
         label={
           feed.type === 'feed'
             ? _(
-                msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`,
+                msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, sparked by ${feed.likeCount || 0}`,
               )
             : _(
                 msg`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`,

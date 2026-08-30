@@ -13,7 +13,7 @@ import {Image} from 'expo-image'
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {flatten, useTheme} from '#/alf'
 
-const ratio = 57 / 64
+const ratio = 1
 
 type Props = {
   allowVariants?: boolean
@@ -45,7 +45,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
               ? require('../../../assets/kawaii.png')
               : require('../../../assets/kawaii_smol.png')
         }
-        accessibilityLabel="Bluesky"
+        accessibilityLabel="Sparkable"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
         style={[{height: size, aspectRatio: isJapanLogo ? 2 : 1.4}]}
@@ -58,21 +58,21 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       fill="none"
       // @ts-ignore it's fiiiiine
       ref={ref}
-      viewBox="0 0 64 57"
+      viewBox="0 0 64 64"
       {...rest}
       style={[{width: size, height: size * ratio}, styles]}>
       {gradient && (
         <Defs>
           <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#0A7AFF" stopOpacity="1" />
-            <Stop offset="1" stopColor="#59B9FF" stopOpacity="1" />
+            <Stop offset="0" stopColor="#4153F5" stopOpacity="1" />
+            <Stop offset="1" stopColor="#CDF971" stopOpacity="1" />
           </LinearGradient>
         </Defs>
       )}
 
       <Path
         fill={_fill}
-        d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"
+        d="M63 1C44 24 44 40 63 63C40 44 24 44 1 63C20 40 20 24 1 1C24 20 40 20 63 1Z"
       />
     </Svg>
   )

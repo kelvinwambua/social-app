@@ -15,8 +15,9 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {
-  BSKY_APP_ACCOUNT_DID,
+  DEFAULT_FOLLOW_DIDS,
   DISCOVER_SAVED_FEED,
+  GREENEARTH_SAVED_FEED,
   TIMELINE_SAVED_FEED,
   VIDEO_SAVED_FEED,
 } from '#/lib/constants'
@@ -99,7 +100,10 @@ export function StepFinished() {
       await Promise.all([
         bulkWriteFollows(
           agent,
-          [BSKY_APP_ACCOUNT_DID, ...(listItems?.map(i => i.subject.did) ?? [])],
+          [
+            ...DEFAULT_FOLLOW_DIDS,
+            ...(listItems?.map(i => i.subject.did) ?? []),
+          ],
           starterPack
             ? {uri: starterPack.uri, cid: starterPack.cid}
             : undefined,
@@ -110,6 +114,10 @@ export function StepFinished() {
 
           // Default feeds that every user should have pinned when landing in the app
           const feedsToSave: AppBskyActorDefs.SavedFeed[] = [
+            {
+              ...GREENEARTH_SAVED_FEED,
+              id: TID.nextStr(),
+            },
             {
               ...DISCOVER_SAVED_FEED,
               id: TID.nextStr(),

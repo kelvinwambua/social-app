@@ -42,7 +42,7 @@ export function useValuePropText(step: 0 | 1 | 2) {
         msg`No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention.`,
       ),
       alt: _(
-        msg`An illustration of several Bluesky posts alongside repost, like, and comment icons`,
+        msg`An illustration of several Sparkable posts alongside repost, spark, and comment icons`,
       ),
     },
   ][step]

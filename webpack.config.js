@@ -88,10 +88,13 @@ module.exports = async function (env, argv) {
     config.plugins.push(new ReactRefreshWebpackPlugin())
     // Reap zombie HMR WebSocket connections that linger after refresh.
     // Without this, dead sockets exhaust the browser's per-origin connection
-    // pool and the dev server stops responding.
+    // pool and the dev server stops responding. The timeout must exceed the
+    // cold first-compile time, otherwise the browser's initial bundle request
+    // (held open by the dev server until the compile finishes) is destroyed
+    // mid-compile and the page fails with ERR_EMPTY_RESPONSE.
     config.devServer.onListening = devServer => {
       devServer.server.on('connection', socket => {
-        socket.setTimeout(10000)
+        socket.setTimeout(600000)
         socket.on('timeout', () => socket.destroy())
       })
     }
