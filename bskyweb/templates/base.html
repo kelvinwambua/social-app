@@ -196,12 +196,13 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{{ staticCDNHost }}/static/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ staticCDNHost }}/static/favicon-16x16.png">
   <link rel="mask-icon" href="{{ staticCDNHost }}/static/safari-pinned-tab.svg" color="#4153F5">
-  <meta name="theme-color">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4153F5">
   <meta name="application-name" content="Sparkable">
   <meta name="generator" content="bskyweb">
   {% if noindex %}<meta name="robots" content="noindex{% if nofollow %}, nofollow{% endif %}">{% endif %}
   <meta property="og:site_name" content="Sparkable">
-  <meta property="og:logo" content="{{ favicon }}">
+  <meta property="og:logo" content="{{ siteOrigin }}/static/favicon.png">
   <meta name="twitter:site" content="@sparkable" />
   <link type="application/activity+json" href="" />
 

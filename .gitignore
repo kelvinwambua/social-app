@@ -9,6 +9,7 @@ expo-env.d.ts
 
 # Build outputs
 bskyweb/bskyweb.exe
+bskyweb/bskyweb.exe~
 bskyweb/bskyweb
 build/
 

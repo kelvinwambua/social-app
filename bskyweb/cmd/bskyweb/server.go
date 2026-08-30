@@ -65,6 +65,7 @@ type Config struct {
 	linkHost      string
 	ipccHost      string
 	staticCDNHost string
+	siteOrigin    string
 }
 
 func serve(cctx *cli.Context) error {
@@ -137,6 +138,7 @@ func serve(cctx *cli.Context) error {
 			linkHost:      linkHost,
 			ipccHost:      ipccHost,
 			staticCDNHost: staticCDNHost,
+			siteOrigin:    oauthClientOrigin,
 		},
 		ipccClient: http.Client{
 			Transport: &http.Transport{
@@ -293,6 +295,42 @@ func serve(cctx *cli.Context) error {
 			payload["message"], payload["file"], payload["line"],
 			payload["col"], payload["stack"])
 		return c.NoContent(http.StatusNoContent)
+	})
+
+	/*
+	 * PWA manifest. Served dynamically rather than as a static file so the
+	 * icon URLs stay absolute against whatever origin is serving the app.
+	 */
+	e.GET("/manifest.json", func(c echo.Context) error {
+		origin := server.siteOrigin(c)
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"name":             "Sparkable",
+			"short_name":       "Sparkable",
+			"description":      "Spark the best in people.",
+			"start_url":        "/",
+			"scope":            "/",
+			"display":          "standalone",
+			"background_color": "#ffffff",
+			"theme_color":      "#4153F5",
+			"icons": []map[string]interface{}{
+				{
+					"src":   origin + "/static/favicon-32x32.png",
+					"sizes": "32x32",
+					"type":  "image/png",
+				},
+				{
+					"src":   origin + "/static/apple-touch-icon.png",
+					"sizes": "180x180",
+					"type":  "image/png",
+				},
+				{
+					"src":     origin + "/static/social-card-default.png",
+					"sizes":   "1200x630",
+					"type":    "image/png",
+					"purpose": "any",
+				},
+			},
+		})
 	})
 
 	e.GET("/client-metadata.json", func(c echo.Context) error {
@@ -530,11 +568,29 @@ func (srv *Server) Shutdown() error {
 	return shutdownErr
 }
 
+// siteOrigin returns the absolute public origin of this deployment, e.g.
+// "https://sparkable.cc". Open Graph and Twitter card metadata require absolute
+// URLs, so relative paths are not an option there. Falls back to the request's
+// own host when nothing is configured, which keeps preview deployments correct.
+func (srv *Server) siteOrigin(c echo.Context) string {
+	if srv.cfg.siteOrigin != "" {
+		return srv.cfg.siteOrigin
+	}
+	scheme := "https"
+	if forwarded := c.Request().Header.Get("X-Forwarded-Proto"); forwarded != "" {
+		scheme = forwarded
+	}
+	return scheme + "://" + c.Request().Host
+}
+
 // NewTemplateContext returns a new pongo2 context with some default values.
-func (srv *Server) NewTemplateContext() pongo2.Context {
+func (srv *Server) NewTemplateContext(c echo.Context) pongo2.Context {
+	origin := srv.siteOrigin(c)
 	return pongo2.Context{
 		"staticCDNHost": srv.cfg.staticCDNHost,
 		"favicon":       fmt.Sprintf("%s/static/favicon.png", srv.cfg.staticCDNHost),
+		"siteOrigin":    origin,
+		"socialCard":    fmt.Sprintf("%s/static/social-card-default.png", origin),
 		"noindex":       false,
 		"nofollow":      false,
 	}
@@ -546,7 +602,7 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 		code = he.Code
 	}
 	c.Logger().Error(err)
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	data["statusCode"] = code
 	c.Render(code, "error.html", data)
 }
@@ -598,7 +654,7 @@ type renderOptions struct {
 // webGeneric returns a handler that renders the base SPA shell with the given
 // render options applied to the template context.
 func (srv *Server) webGeneric(c echo.Context, o renderOptions) error {
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	data["noindex"] = o.noindex
 	data["nofollow"] = o.nofollow
 	return c.Render(http.StatusOK, "base.html", data)
@@ -624,7 +680,7 @@ func (srv *Server) WebGenericNoindexNofollow(c echo.Context) error {
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
@@ -656,7 +712,7 @@ var hideReplyLabels = map[string]bool{
 
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -786,7 +842,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 func (srv *Server) WebStarterPack(c echo.Context) error {
 	req := c.Request()
 	ctx := req.Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -830,7 +886,7 @@ var chatInviteCodeRe = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
 func (srv *Server) WebChatInvite(c echo.Context) error {
 	req := c.Request()
 	ctx := req.Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	data["noindex"] = true
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 
@@ -862,7 +918,7 @@ func (srv *Server) WebChatInvite(c echo.Context) error {
 
 func (srv *Server) WebProfile(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	handleOrDIDParam := c.Param("handleOrDID")
@@ -934,7 +990,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 
 func (srv *Server) WebFeed(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")

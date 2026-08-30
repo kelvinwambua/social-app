@@ -204,6 +204,61 @@ function renderIcon({size, fill, background = null, scale = 1}) {
   return encodePNG(size, size, rgba)
 }
 
+/**
+ * Social sharing card (Open Graph / Twitter). Non-square, so it does not fit
+ * renderIcon's square canvas - the mark is centred on a plain background at the
+ * 1.91:1 ratio those platforms crop to.
+ */
+function renderSocialCard({width, height, fill, background, markHeight}) {
+  const marked = height * markHeight
+  const offsetX = (width - marked) / 2
+  const offsetY = (height - marked) / 2
+  const points = flattenPath(LOGO_PATH).map(([x, y]) => [
+    offsetX + (x / VIEWBOX) * marked,
+    offsetY + (y / VIEWBOX) * marked,
+  ])
+
+  // rasterize() assumes a square buffer, so scan the full width explicitly.
+  const coverage = new Float32Array(width * height)
+  const edges = []
+  for (let i = 0; i < points.length; i++) {
+    const a = points[i]
+    const b = points[(i + 1) % points.length]
+    if (a[1] !== b[1]) edges.push([a, b])
+  }
+  const sub = 5
+  for (let y = 0; y < height; y++) {
+    for (let s = 0; s < sub; s++) {
+      const sy = y + (s + 0.5) / sub
+      const xs = []
+      for (const [a, b] of edges) {
+        if (sy >= Math.min(a[1], b[1]) && sy < Math.max(a[1], b[1])) {
+          xs.push(a[0] + ((sy - a[1]) / (b[1] - a[1])) * (b[0] - a[0]))
+        }
+      }
+      xs.sort((m, n) => m - n)
+      for (let k = 0; k + 1 < xs.length; k += 2) {
+        const s0 = Math.max(0, xs[k])
+        const s1 = Math.min(width, xs[k + 1])
+        for (let x = Math.floor(s0); x <= Math.ceil(s1) - 1; x++) {
+          const c = Math.min(s1, x + 1) - Math.max(s0, x)
+          if (c > 0) coverage[y * width + x] += (c / sub)
+        }
+      }
+    }
+  }
+
+  const rgba = Buffer.alloc(width * height * 4)
+  for (let i = 0; i < width * height; i++) {
+    const alpha = Math.max(0, Math.min(1, coverage[i]))
+    rgba[i * 4] = Math.round(background[0] * (1 - alpha) + fill[0] * alpha)
+    rgba[i * 4 + 1] = Math.round(background[1] * (1 - alpha) + fill[1] * alpha)
+    rgba[i * 4 + 2] = Math.round(background[2] * (1 - alpha) + fill[2] * alpha)
+    rgba[i * 4 + 3] = 255
+  }
+  return encodePNG(width, height, rgba)
+}
+
 const TARGETS = [
   {path: 'assets/favicon.png', size: 64, fill: BRAND_BLUE, scale: 0.94},
   {path: 'assets/logo.png', size: 512, fill: BRAND_BLUE, scale: 0.94},
@@ -265,6 +320,20 @@ const TARGETS = [
     scale: 0.66,
   },
 ]
+
+const socialCard = resolve(ROOT, 'bskyweb/static/social-card-default.png')
+mkdirSync(dirname(socialCard), {recursive: true})
+writeFileSync(
+  socialCard,
+  renderSocialCard({
+    width: 1200,
+    height: 630,
+    fill: BRAND_BLUE,
+    background: WHITE,
+    markHeight: 0.52,
+  }),
+)
+console.log('wrote bskyweb/static/social-card-default.png')
 
 for (const {path, ...options} of TARGETS) {
   const out = resolve(ROOT, path)
