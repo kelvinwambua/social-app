@@ -116,7 +116,10 @@ ENTRYPOINT ["dumb-init", "--"]
 WORKDIR /bskyweb
 COPY --from=go-build /bskyweb /usr/bin/bskyweb
 
-CMD ["/usr/bin/bskyweb"]
+# `serve` is required: main.go registers commands but no default action, so
+# running the binary bare prints help and exits, which reads as a silent
+# crash on hosts that just run the image (Railway, Hetzner).
+CMD ["/usr/bin/bskyweb", "serve"]
 
 LABEL org.opencontainers.image.source=https://github.com/bluesky-social/social-app
 LABEL org.opencontainers.image.description="bsky.app Web App"
