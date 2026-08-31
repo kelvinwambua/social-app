@@ -21,6 +21,7 @@ import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Lightbox} from '#/components/Lightbox'
+import {LoggedOutBanner} from '#/components/LoggedOutBanner'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {
   Outlet as PolicyUpdateOverlayPortalOutlet,
@@ -151,7 +152,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
 export function Shell() {
   const t = useTheme()
   const aa = useAgeAssurance()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   return (
     <View style={[a.util_screen_outer, t.atoms.bg]}>
       {currentAccount?.status === 'takendown' ? (
@@ -164,6 +165,12 @@ export function Shell() {
             <NoAccessScreen />
           ) : (
             <RoutesContainer>
+              {/*
+               * Sits above the navigator rather than inside a screen so it
+               * reads as a page header across every logged-out route, the
+               * way it does on sparkable.cc.
+               */}
+              {!hasSession && <LoggedOutBanner />}
               <ShellInner />
             </RoutesContainer>
           )}
