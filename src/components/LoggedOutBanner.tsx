@@ -2,7 +2,8 @@ import {Image as RNImage, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutIcon} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutward_Stroke2_Corner0_Rounded as ArrowOutwardIcon} from '#/components/icons/ArrowOutward'
+import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 // @ts-ignore web asset
@@ -44,7 +45,7 @@ export function LoggedOutBanner() {
   const {gtMobile} = useBreakpoints()
 
   return (
-    <View style={[a.w_full, a.align_center, a.px_md, {paddingTop: 8}]}>
+    <Layout.Center style={[a.px_md, {paddingTop: 8, paddingBottom: 4}]}>
       <View
         style={[
           a.w_full,
@@ -52,7 +53,6 @@ export function LoggedOutBanner() {
           a.border,
           a.overflow_hidden,
           {
-            maxWidth: 600,
             borderRadius: 20,
             padding: 16,
             borderColor: 'rgba(39, 41, 55, 0.12)',
@@ -72,8 +72,8 @@ export function LoggedOutBanner() {
             a.text_center,
             a.font_bold,
             {
-              fontSize: gtMobile ? 36 : 26,
-              lineHeight: gtMobile ? 40 : 30,
+              fontSize: gtMobile ? 32 : 24,
+              lineHeight: gtMobile ? 36 : 28,
               letterSpacing: -0.8,
               color: 'rgb(39, 41, 55)',
             },
@@ -126,7 +126,7 @@ export function LoggedOutBanner() {
             ]}>
             <Trans>Learn more about Sparkable</Trans>
           </Text>
-          <ArrowOutIcon size="xs" fill={t.palette.white} />
+          <ArrowOutwardIcon size="xs" fill={t.palette.white} />
         </Link>
 
         <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_md]}>
@@ -148,6 +148,6 @@ export function LoggedOutBanner() {
           />
         </View>
       </View>
-    </View>
+    </Layout.Center>
   )
 }

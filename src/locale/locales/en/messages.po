@@ -1326,11 +1326,11 @@ msgstr ""
 msgid "Add user to list"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:330
+#: src/ageAssurance/components/NoAccessScreen.tsx:356
 msgid "Add your birthdate"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:345
 msgid "Add your birthdate on Bluesky"
 msgstr "Add your birthdate on Bluesky"
 
@@ -1423,7 +1423,7 @@ msgstr ""
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:486
+#: src/ageAssurance/components/NoAccessScreen.tsx:512
 msgid "Age assurance only takes a few minutes."
 msgstr "Age assurance only takes a few minutes."
 
@@ -2071,7 +2071,7 @@ msgstr ""
 msgid "Banned user returning"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:188
+#: src/ageAssurance/components/NoAccessScreen.tsx:214
 msgid "Based on your device's location, we think you're in <0>{geolocationString}</0>."
 msgstr "Based on your device's location, we think you're in <0>{geolocationString}</0>."
 
@@ -2079,7 +2079,7 @@ msgstr "Based on your device's location, we think you're in <0>{geolocationStrin
 msgid "Based on your device's location, we think you're in <0>{region}</0>."
 msgstr "Based on your device's location, we think you're in <0>{region}</0>."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:198
+#: src/ageAssurance/components/NoAccessScreen.tsx:224
 msgid "Based on your network, we think you're in <0>{geolocationString}</0>. This estimate may be inaccurate if you're using a VPN."
 msgstr "Based on your network, we think you're in <0>{geolocationString}</0>. This estimate may be inaccurate if you're using a VPN."
 
@@ -2087,7 +2087,7 @@ msgstr "Based on your network, we think you're in <0>{geolocationString}</0>. Th
 msgid "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
 msgstr "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:305
+#: src/ageAssurance/components/NoAccessScreen.tsx:331
 msgid "Because you signed in with Bluesky, your birthdate is set on your Bluesky account. Add it there, then come back and refresh this page."
 msgstr "Because you signed in with Bluesky, your birthdate is set on your Bluesky account. Add it there, then come back and refresh this page."
 
@@ -2933,11 +2933,11 @@ msgstr "Click here to add people to this group chat"
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Click here to create or manage an invite link for this group chat"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:364
+#: src/ageAssurance/components/NoAccessScreen.tsx:390
 msgid "Click here to delete your account"
 msgstr "Click here to delete your account"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:355
+#: src/ageAssurance/components/NoAccessScreen.tsx:381
 msgid "Click here to log out"
 msgstr ""
 
@@ -2950,8 +2950,8 @@ msgstr "Click here to resend the email"
 msgid "Click here to restart the verification process."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:123
-#: src/ageAssurance/components/NoAccessScreen.tsx:327
+#: src/ageAssurance/components/NoAccessScreen.tsx:149
+#: src/ageAssurance/components/NoAccessScreen.tsx:353
 msgid "Click here to update your birthdate"
 msgstr ""
 
@@ -3056,7 +3056,7 @@ msgstr "Close banner"
 msgid "Close dialog"
 msgstr ""
 
-#: src/view/shell/index.web.tsx:120
+#: src/view/shell/index.web.tsx:121
 msgid "Close drawer menu"
 msgstr ""
 
@@ -3213,7 +3213,7 @@ msgstr "Connecting…"
 msgid "Connection issue"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:441
+#: src/ageAssurance/components/NoAccessScreen.tsx:467
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:128
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:31
 msgid "Contact our moderation team"
@@ -5596,7 +5596,7 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:110
+#: src/ageAssurance/components/NoAccessScreen.tsx:136
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr ""
 
@@ -6128,11 +6128,11 @@ msgstr ""
 msgid "Hey there 👋"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:175
+#: src/ageAssurance/components/NoAccessScreen.tsx:201
 msgid "Hey there!"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:280
+#: src/ageAssurance/components/NoAccessScreen.tsx:306
 msgid "Hi there!"
 msgstr ""
 
@@ -6387,7 +6387,7 @@ msgstr ""
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:120
+#: src/ageAssurance/components/NoAccessScreen.tsx:146
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
 msgstr ""
 
@@ -6523,7 +6523,7 @@ msgstr ""
 msgid "Imported on {0}"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:283
+#: src/ageAssurance/components/NoAccessScreen.tsx:309
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
 
@@ -6601,6 +6601,10 @@ msgstr "Include video timestamp ({videoTimestamp})"
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
 msgstr ""
+
+#: src/components/LoggedOutBanner.tsx:138
+msgid "Independent non-profit organization"
+msgstr "Independent non-profit organization"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:124
 msgid "Input code sent to your email for password reset"
@@ -6885,12 +6889,12 @@ msgstr ""
 msgid "Larger"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:480
+#: src/ageAssurance/components/NoAccessScreen.tsx:506
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:179
 msgid "Last initiated {timeAgo} ago"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:478
+#: src/ageAssurance/components/NoAccessScreen.tsx:504
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:177
 msgid "Last initiated just now"
 msgstr ""
@@ -6940,6 +6944,8 @@ msgstr ""
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
+#: src/components/LoggedOutBanner.tsx:107
+#: src/components/LoggedOutBanner.tsx:127
 #: src/view/com/auth/SplashScreen.web.tsx:192
 msgid "Learn more about Sparkable"
 msgstr "Learn more about Sparkable"
@@ -8528,11 +8534,15 @@ msgstr ""
 msgid "Open advanced search options"
 msgstr "Open advanced search options"
 
+#: src/components/LoggedOutBanner.tsx:146
+msgid "Open and public"
+msgstr "Open and public"
+
 #: src/screens/Onboarding/StepProfile/index.tsx:308
 msgid "Open avatar creator"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:314
+#: src/ageAssurance/components/NoAccessScreen.tsx:340
 msgid "Open Bluesky settings to add your birthdate"
 msgstr "Open Bluesky settings to add your birthdate"
 
@@ -11042,7 +11052,7 @@ msgstr ""
 msgid "Set who can reply to your post"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:290
+#: src/ageAssurance/components/NoAccessScreen.tsx:316
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr ""
 
@@ -11717,6 +11727,10 @@ msgstr "Spark this feed"
 msgid "Spark this labeler"
 msgstr "Spark this labeler"
 
+#: src/components/LoggedOutBanner.tsx:98
+msgid "Sparkable is a social media platform designed to bridge divides. We're a nonprofit aiming to strengthen democracy and social cohesion by rebuilding social media into a force for good."
+msgstr "Sparkable is a social media platform designed to bridge divides. We're a nonprofit aiming to strengthen democracy and social cohesion by rebuilding social media into a force for good."
+
 #: src/components/ProgressGuide/List.tsx:115
 msgid "Sparkable is better with friends!"
 msgstr "Sparkable is better with friends!"
@@ -12095,7 +12109,7 @@ msgstr ""
 msgid "Tap for more information"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:217
+#: src/ageAssurance/components/NoAccessScreen.tsx:243
 #: src/screens/Signup/StepInfo/index.tsx:326
 msgid "Tap here to update your location with GPS."
 msgstr "Tap here to update your location with GPS."
@@ -12229,7 +12243,7 @@ msgstr "Thanks for your feedback!"
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:237
+#: src/ageAssurance/components/NoAccessScreen.tsx:263
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:224
 msgid "Thanks! You're all set."
 msgstr ""
@@ -13004,7 +13018,7 @@ msgstr ""
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:352
+#: src/ageAssurance/components/NoAccessScreen.tsx:378
 msgid "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete your account</1>."
 msgstr "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete your account</1>."
 
@@ -13305,11 +13319,11 @@ msgstr ""
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:267
+#: src/ageAssurance/components/NoAccessScreen.tsx:293
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:251
+#: src/ageAssurance/components/NoAccessScreen.tsx:277
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr ""
 
@@ -13504,7 +13518,7 @@ msgstr ""
 msgid "Update your email"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:212
+#: src/ageAssurance/components/NoAccessScreen.tsx:238
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:252
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:41
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:106
@@ -14162,6 +14176,10 @@ msgstr ""
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr ""
 
+#: src/components/LoggedOutBanner.tsx:81
+msgid "We need healthier social media. More urgently than ever."
+msgstr "We need healthier social media. More urgently than ever."
+
 #: src/components/contacts/screens/PhoneInput.tsx:184
 msgid "We need to verify your number before we can look for your friends. A verification code will be sent to this number."
 msgstr ""
@@ -14268,7 +14286,7 @@ msgstr "We’re so excited to have you join us!"
 msgid "We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky."
 msgstr "We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:231
+#: src/ageAssurance/components/NoAccessScreen.tsx:257
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:218
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr ""
@@ -14519,7 +14537,7 @@ msgstr ""
 msgid "You are a trusted verifier"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:178
+#: src/ageAssurance/components/NoAccessScreen.tsx:204
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr ""
 
@@ -14544,7 +14562,7 @@ msgstr ""
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:437
+#: src/ageAssurance/components/NoAccessScreen.tsx:463
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:124
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
