@@ -34,6 +34,7 @@ function assetUri(asset: unknown): string {
 const bannerBgUri = assetUri(bannerBg)
 const badgeNonprofitUri = assetUri(badgeNonprofit)
 const badgeOpenUri = assetUri(badgeOpen)
+const ABOUT_SPARKABLE_URL = 'https://blog.sparkable.cc/about'
 
 /**
  * Mirrors the hero card on sparkable.cc. Only rendered for logged-out
@@ -103,16 +104,18 @@ export function LoggedOutBanner() {
         </Text>
 
         <Link
-          to="https://blog.sparkable.cc/about"
+          to={ABOUT_SPARKABLE_URL}
           label={l`Learn more about Sparkable`}
           /*
-           * Returning false makes Link bail out before its web branch calls
-           * preventDefault, so the anchor navigates natively. Its normal path
-           * routes through Linking.openURL -> window.open, which popup
-           * blockers reject, and the button silently did nothing. This also
-           * restores cmd/middle-click opening in a new tab.
+           * The shared Link opens external URLs in a new tab. Embedded browsers
+           * can block that and make the button appear inert, so make a regular
+           * click navigate the current tab. The href remains available for
+           * keyboard access and browser link actions.
            */
-          onPress={() => false}
+          onPress={() => {
+            window.location.assign(ABOUT_SPARKABLE_URL)
+            return false
+          }}
           style={[
             a.flex_row,
             a.align_center,
