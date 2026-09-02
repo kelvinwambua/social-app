@@ -105,6 +105,14 @@ export function LoggedOutBanner() {
         <Link
           to="https://blog.sparkable.cc/about"
           label={l`Learn more about Sparkable`}
+          /*
+           * Returning false makes Link bail out before its web branch calls
+           * preventDefault, so the anchor navigates natively. Its normal path
+           * routes through Linking.openURL -> window.open, which popup
+           * blockers reject, and the button silently did nothing. This also
+           * restores cmd/middle-click opening in a new tab.
+           */
+          onPress={() => false}
           style={[
             a.flex_row,
             a.align_center,
