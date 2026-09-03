@@ -189,6 +189,7 @@ const WebCenterBorders = memo(function LayoutWebCenterBorders() {
   const {centerColumnOffset} = useLayoutBreakpoints()
   return gtMobile ? (
     <View
+      pointerEvents="none"
       style={[
         a.fixed,
         a.inset_0,

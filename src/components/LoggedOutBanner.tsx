@@ -4,7 +4,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ArrowOutward_Stroke2_Corner0_Rounded as ArrowOutwardIcon} from '#/components/icons/ArrowOutward'
 import * as Layout from '#/components/Layout'
-import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 // @ts-ignore web asset
 import badgeNonprofit from '../../assets/images/banner/badge-nonprofit.png'
@@ -103,33 +102,22 @@ export function LoggedOutBanner() {
           </Trans>
         </Text>
 
-        <Link
-          to={ABOUT_SPARKABLE_URL}
-          label={l`Learn more about Sparkable`}
-          /*
-           * The shared Link opens external URLs in a new tab. Embedded browsers
-           * can block that and make the button appear inert, so make a regular
-           * click navigate the current tab. The href remains available for
-           * keyboard access and browser link actions.
-           */
-          onPress={() => {
-            window.location.assign(ABOUT_SPARKABLE_URL)
-            return false
-          }}
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.justify_center,
-            a.gap_sm,
-            {
-              marginTop: 16,
-              marginBottom: 10,
-              paddingVertical: 12,
-              paddingHorizontal: 24,
-              borderRadius: 30,
-              backgroundColor: t.palette.primary_500,
-            },
-          ]}>
+        <a
+          href={ABOUT_SPARKABLE_URL}
+          target="_self"
+          aria-label={l`Learn more about Sparkable`}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            marginTop: 16,
+            marginBottom: 10,
+            padding: '12px 24px',
+            borderRadius: 30,
+            backgroundColor: t.palette.primary_500,
+            textDecoration: 'none',
+          }}>
           <Text
             style={[
               a.font_semi_bold,
@@ -138,7 +126,7 @@ export function LoggedOutBanner() {
             <Trans>Learn more about Sparkable</Trans>
           </Text>
           <ArrowOutwardIcon size="xs" fill={t.palette.white} />
-        </Link>
+        </a>
 
         <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_md]}>
           <RNImage
