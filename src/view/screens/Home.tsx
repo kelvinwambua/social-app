@@ -42,6 +42,7 @@ import {
 } from '#/view/com/util/MainScrollProvider'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
+import {LoggedOutBannerSlot} from '#/components/LoggedOutBannerSlot'
 import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
@@ -87,6 +88,7 @@ export function HomeScreen(props: Props) {
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
+        {!currentAccount && <LoggedOutBannerSlot />}
         <HomeHeaderModeProvider>
           <HomeScreenReady
             {...props}
@@ -99,6 +101,7 @@ export function HomeScreen(props: Props) {
   } else {
     return (
       <Layout.Screen>
+        {!currentAccount && <LoggedOutBannerSlot />}
         <Layout.Center style={styles.loading}>
           <ActivityIndicator size="large" />
         </Layout.Center>

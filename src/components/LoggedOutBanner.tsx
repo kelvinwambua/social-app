@@ -104,7 +104,8 @@ export function LoggedOutBanner() {
 
         <a
           href={ABOUT_SPARKABLE_URL}
-          target="_self"
+          target="_blank"
+          rel="noopener noreferrer"
           aria-label={l`Learn more about Sparkable`}
           style={{
             display: 'flex',
